@@ -1,0 +1,1311 @@
+# Store field-case and Agent lessons for retrieval.
+
+lessons:
+  - id: F001
+    former_id: P19
+    title: "SimPEG's \"gz\" is the negative of a gravity anomaly"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A2
+    covered_by: tests/test_gravity_sign_convention.py
+    evidence: "The sharpest finding in either case, and the one that had been wrong in OFAG since the gravity plugin was written."
+
+  - id: F002
+    former_id: P20
+    title: "The reduction density of the delivered data is not the reduction density of the modelling"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A8
+    covered_by: null
+    evidence: "Both numbers ship in the same folder and neither is wrong. The survey's own README, describing the exact column used: *\"gCBGA: Complete Bouguer gravity anomaly using reduction density of 2.67 g/cc\"*, and the ArcGIS metadata says it a second time."
+
+  - id: F003
+    former_id: P21
+    title: "A bottom-up error budget counts only the terms that were written down"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: A4
+    covered_by: tests/test_uncertainty.py
+    evidence: "The uncertainty here was first derived rather than taken: errg is 0.001 mGal, the meter's repeatability after processing, and station elevations good to 0.05 m contribute 0.3086 × 0.05 = 0.015 mGal through the free-air gradient and dominate it."
+
+  - id: F004
+    former_id: P22
+    title: "A published model is not a published dataset"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: B7
+    covered_by: null
+    evidence: "The comparison needed Witter's stations and his misfit file names them by position only: three columns of coordinates and one of misfit, no observed value, no station name."
+
+  - id: F005
+    former_id: P23
+    title: "An export can contain coordinates that no place has"
+    source: case1_forge
+    methods: []
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: tests/test_domains.py
+    evidence: "1,513 of the 101,210 points in the top-of-granite surface carry an easting of 3.35 × 10¹⁵ and upward."
+
+  - id: F006
+    former_id: P24
+    title: "A nearest-neighbour resample extrapolates past the edge of its source"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A15
+    covered_by: null
+    evidence: "Made here, in the comparison itself, and caught by the number being absurd."
+
+  - id: F007
+    former_id: P25
+    title: "A regularization that states a preference does not act on it"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A15
+    covered_by: null
+    evidence: "PGI was added to OFAG for this case: the inversion is given rock classes — a mean, a spread, a share of the volume — and prefers models made of them."
+
+  - id: F008
+    former_id: P26
+    title: "Reordering a Gaussian mixture after computing its precisions re-pairs them"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A15
+    covered_by: null
+    evidence: "SimPEG's WeightedGaussianMixture has compute_clusters_precisions, which derives the precisions from the covariances in place, and order_clusters_GM_weight, which sorts the classes by weight."
+
+  - id: F009
+    former_id: P27
+    title: "A Gaussian class is the wrong shape for a gradient"
+    source: case1_forge
+    methods: [gravity, boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A14
+    covered_by: null
+    evidence: "Three of the four rock classes here are rocks. The fourth, shallow basin fill, is a depth trend: cuttings from well 58-32 give it falling from ~2.4 g/cm³ at 660 m to ~2.0 at surface, and 2.20 is the midpoint of that, not a value anything has."
+
+  - id: F010
+    former_id: P28
+    title: "A derived log carries the assumption it was derived under"
+    source: case1_forge
+    methods: [gravity, boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: null
+    evidence: "The worst entry in this log, because it was not caught by checking the data."
+
+  - id: F011
+    former_id: P29
+    title: "A depth of investigation can measure the mesh instead of the data"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C1
+    covered_by: tests/test_diagnosis.py
+    evidence: "Oldenburg and Li's test is simple and it is the right one to reach for: invert the same data twice against two different reference models, and R = |m_a − m_b| / |reference_a − reference_b| runs from 0 where the data decides to 1 where each run is only repeating what it was given."
+
+  - id: F012
+    former_id: P30
+    title: "Reporting the prior back as a result"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A5
+    covered_by: null
+    evidence: "Written into this document, three sections after F010 warned about exactly this, and caught when a reader asked where the class values had come from."
+
+  - id: F013
+    former_id: P31
+    title: "A cell is not a unit of ground"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A7
+    covered_by: tests/test_cell_model.py
+    evidence: "F011 found a depth-of-investigation index reading cell size instead of depth."
+
+  - id: F014
+    former_id: P32
+    title: "A model of the wrong kind still returns a model and a misfit"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A14
+    covered_by: null
+    evidence: "The magnetotellurics arrived as 122 sites and a layered inversion will accept all 122."
+
+  - id: F015
+    former_id: P33
+    title: "Averaging two polarisations is not averaging two measurements"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A14
+    covered_by: tests/test_mt_import.py
+    evidence: "A layered earth has one impedance and a tensor has four numbers, so something has to reduce the second to the first."
+
+  - id: F016
+    former_id: P34
+    title: "The screen that admits a site does not predict whether it fits"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: measurable
+    procedure: A6
+    covered_by: tests/test_screens.py
+    evidence: "Having built the screen in F014 and chosen the scalar in F015, the obvious next move is to tighten the cutoff until the misfit behaves."
+
+  - id: F017
+    former_id: P35
+    title: "A transmitter that takes three microseconds to switch off is not a step"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A3
+    covered_by: tests/test_tem_import.py
+    evidence: "The ground TEM inversion was given a step-off waveform, which is the default everywhere and is what a transmitter does in the limit."
+
+  - id: F018
+    former_id: P36
+    title: "The scatter of the repeats is not the uncertainty of the datum"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: A4
+    covered_by: tests/test_uncertainty.py
+    evidence: "The TEM uncertainty is measured rather than declared: at each gate, the scatter of the sweeps that were stacked into it."
+
+  - id: F019
+    former_id: P37
+    title: "Reading a child's result after waiting for it to exit"
+    source: case1_forge
+    methods: []
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: null
+    covered_by: tests/test_local_process_executor.py
+    evidence: "The local executor ran each job in a multiprocessing.Process, handed the result back through a multiprocessing.Queue, and waited for the process to finish before reading it."
+
+  - id: F020
+    former_id: P38
+    title: "A file's idea of its own name is not an identifier"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: A13
+    covered_by: tests/test_tem_import.py
+    evidence: "The USF soundings each declare /SOUNDING_NAME, and this survey has four names used twice: the 2017 campaign restarted its numbering, so there are two Station1, two Station2, two Station4 and two Station5."
+
+  - id: F021
+    former_id: P39
+    title: "An unset regularization weight is not a neutral one, twice more"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A15
+    covered_by: tests/test_simpeg_tdem1d.py
+    evidence: "Third occurrence, and the first two are F007. SimPEG scales a smoothness weight that is left at None by the square of the cell size."
+
+  - id: F022
+    former_id: P40
+    title: "A screen can be contaminated by the thing it is screening for"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: A6
+    covered_by: tests/test_screens.py
+    evidence: F016 found the magnetotelluric admissibility index uncorrelated with the misfit and stopped there, concluding that the index was necessary but not sufficient. That was the wrong conclusion. The index was not weak; it was measuring something else.
+
+  - id: F023
+    former_id: P41
+    title: "Two simulations in one library, indexed from opposite ends"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A2
+    covered_by: tests/test_conventions.py
+    evidence: "The largest error in this case, found last, and it invalidates three earlier diagnoses that each had numbers behind them."
+
+  - id: F024
+    former_id: P42
+    title: "The reference model is built from the file the delivery says not to use"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A8
+    covered_by: null
+    evidence: "The gravity folder ships two published density models on the same mesh, both fitting the same 323 stations to the same misfit — 0.0301 and 0.0299 mGal RMS — and differing from each other by 0.0283 g/cm³ RMS across 225,063 of their 268,773 cells."
+
+  - id: F025
+    former_id: P43
+    title: "A figure drawn from a retyped constant is still a figure"
+    source: case1_forge
+    methods: []
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A8
+    covered_by: null
+    evidence: "The example notebook redefined the model volume instead of importing it: VOLUME = (332_000, 340_250, 4_256_000, 4_261_250) # the notebook VOLUME = (331_900, 340_150, 4_259_925, 4_265_150) # the case script 3,900 m too far south."
+
+  - id: F026
+    former_id: P44
+    title: "The model volume is two constants, and only one was used"
+    source: case1_forge
+    methods: []
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A8
+    covered_by: null
+    evidence: "VOLUME is the horizontal extent and ELEVATION_RANGE_M the vertical one."
+
+  - id: F027
+    former_id: P45
+    title: "A guard is not a substitute for a fit"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: C2
+    covered_by: tests/test_interpretation.py
+    evidence: "The shallow surface was first built by nearest neighbour, wrapped in a 1,500 m reach guard: past that distance a cell was left unassigned rather than given a far-away sounding's value."
+
+  - id: F028
+    former_id: P46
+    title: "Dip azimuth is the direction of descent"
+    source: case1_forge
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A2
+    covered_by: tests/test_geology.py
+    evidence: "GemPy was tried for this surface, since OFAG ships an adapter for it and an implicit engine is the standard tool for carrying a contact across a gap."
+
+  - id: F029
+    former_id: P47
+    title: "The fixture used the field the way the bug did"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A2
+    covered_by: tests/test_tem_dialects.py
+    evidence: "Every column of the stitched TEM section claimed to be at the origin."
+
+  - id: F030
+    former_id: P48
+    title: "A recorded identifier that was never resolved"
+    source: case1_forge
+    methods: []
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A13
+    covered_by: tests/test_identifiers.py
+    evidence: It read "3DEP 1/3 arc-second" against DOI 10.5066/F7PR7TFT. The raster is 29.99 m, so it is 1 arc-second and not 1/3; and that DOI resolves to Shuttle Radar Topography Mission (SRTM) 1 Arc-Second Global, which is a different mission, a different sensor and a radar surface rather than bare earth.
+
+  - id: F031
+    former_id: C1
+    title: "A null value that is a number"
+    source: case2_cedar_rapids
+    methods: [fdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: tests/test_domains.py
+    evidence: "RES2_FINAL carries −99999 for every layer below the depth of investigation: 22.4 per cent of all layer values in the file."
+
+  - id: F032
+    former_id: C2
+    title: "Half of an asked-for convention check does not exist"
+    source: case2_cedar_rapids
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: A2
+    covered_by: tests/test_pygimli_ert.py
+    evidence: "The ERT plugin's UNVERIFIED note named two checks to write: the apparent resistivity of a halfspace, and \"an asymmetric array to catch a reversed electrode order\"."
+
+  - id: F033
+    former_id: C3
+    title: "A sign convention that also cost three times the runtime"
+    source: case2_cedar_rapids
+    methods: [fdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A2
+    covered_by: null
+    evidence: "The coaxial pair comes back with the opposite sign to the five coplanar ones, and it is not a defect: SimPEG divides the secondary field by the primary the geometry actually produces, and a coaxial pair's on-axis primary opposes a coplanar pair's broadside one."
+
+  - id: F034
+    former_id: C4
+    title: "A model volume with a flat top over ground that is not"
+    source: case2_cedar_rapids
+    methods: [fdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A12
+    covered_by: tests/test_terrain.py
+    evidence: Every cell sat at minus its depth from a plane at zero, and the depth below that plane was handed to an argument named depth_below_ground_m.
+
+  - id: F035
+    former_id: C5
+    title: "The terrain shipped with the survey and nothing read it"
+    source: case2_cedar_rapids
+    methods: [fdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A12
+    evidence: The measured file carries a DTM column for every one of its 139,602 soundings, and the importer reads four columns — LINE, X, Y, LASER — none of them that one.
+
+  - id: F036
+    former_id: C6
+    title: "A comment that described a construction nobody had written"
+    source: case2_cedar_rapids
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A12
+    evidence: ERT_SITES held five pairs of degrees under a paragraph ending "the midpoint and azimuth are used, the stated length is not". Nothing used them.
+
+  - id: F037
+    former_id: L1
+    title: "The release states the surface twice, and the two disagree"
+    source: case3_llano
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A8
+    covered_by: tests/test_duplicates.py
+    evidence: 'Two elevation lists for the same forty-eight electrodes: the .dat''s own topography block and electrodes_xyz.txt. Profile 1''s are the same values permuted; profile 2''s are different sets. Up to 2.44 m apart, unmarked.'
+
+  - id: F038
+    former_id: L2
+    title: "A published model is a plot export, not a forward-modellable model"
+    source: case3_llano
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: B7
+    covered_by: null
+    evidence: "B7 says to compare against a model the inversion never saw. That was done here, and the comparison was run the strong way: forward-model the authors' published section and see whether it predicts the readings."
+
+  - id: F039
+    former_id: L3
+    title: "The reason a setting was switched on was not the reason that held"
+    source: case3_llano
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: A11
+    covered_by: tests/test_asking.py
+    evidence: "Topography was enabled on an argument — 9.75 m of relief over 188 m, a geometric factor five per cent wrong on terrain — that sounded quantitative and was never measured."
+
+  - id: F040
+    former_id: L4
+    title: "The refusal depth is a hard horizon, not the base of weathering"
+    source: case3_llano
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A14
+    covered_by: null
+    evidence: "borehole_D_log.txt records \"augur refusal at 7.5-8.0 ft\", and 2.3 m was carried into this document twice as the depth a geophysical section would have to match."
+
+  - id: F041
+    former_id: L5
+    title: "Closest approach is not the separation of two lines"
+    source: case3_llano
+    methods: [ert, seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C1
+    covered_by: null
+    evidence: "The site was chosen on \"SRT2 is within 0.4 to 0.9 m of both resistivity profiles\", and that number is real: it is the closest approach."
+
+  - id: F042
+    former_id: L6
+    title: "Two norms were added to the plugin and neither is used"
+    source: case3_llano
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: judgement
+    procedure: A11
+    covered_by: null
+    evidence: "ERTRegularizationSpec gained blocky_model and robust_data, L1 on the model constraint and on the data, because the authors used both and because a weathering front is exactly the sharp boundary L2 cannot place."
+
+  - id: F043
+    former_id: L7
+    title: "A picking program writes a default that looks like a measurement"
+    source: case3_llano
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A1
+    covered_by: tests/test_seisimager.py
+    evidence: Exactly 10.000 ms, 14 times in SRT2's pick file, always within a few stations of the shot.
+
+  - id: F044
+    former_id: L8
+    title: "The cheapest check was the last one tried"
+    source: case3_llano
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: A9
+    covered_by: tests/test_picks.py
+    evidence: It was the third check tried. Reciprocity was reached for first -- it is a theorem, it yields a measured error, it is the thing worth writing about -- and then apparent velocity, which needs a view on what the ground can be.
+
+  - id: F045
+    former_id: L9
+    title: "An artifact path that resolved against the wrong root"
+    source: case3_llano
+    methods: []
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A8
+    covered_by: tests/test_pygimli_traveltime.py
+    evidence: "Every plugin in this project writes relative_path as the path from the artifact root, which begins with the run id, and both import services build the same string by hand."
+
+  - id: F046
+    former_id: L10
+    title: "The same format, and almost none of the same file"
+    source: case3_llano
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A10
+    covered_by: tests/test_tem_dialects.py
+    evidence: "Case 1's .usf reader was written against sixty-eight files from one instrument and read this one wrongly in five separate ways: column order, where the point count is declared, whether the position is there at all, whether the z convention is, and whether the transmitter current has been divided out."
+
+  - id: F047
+    former_id: L11
+    title: "An error bar divided by nothing"
+    source: case3_llano
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A10
+    covered_by: tests/test_tem_dialects.py
+    evidence: "Dividing the transmitter current out of the voltage and not out of its error bar leaves every gate claiming the current's worth of precision it no longer has -- a factor of 9.5 on this survey's high-current sweeps."
+
+  - id: F048
+    former_id: L12
+    title: "An elevation that is a contour crossing, not a measurement"
+    source: case3_llano
+    methods: [ert, seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A12
+    covered_by: tests/test_terrain.py
+    evidence: 'Every surface elevation in the release — 96 electrodes and 48 geophones over four lines — is a whole number of feet, 938 to 970, with 965 absent altogether. The vertical resolution is therefore 0.3048 m. On ERT1 that is one sixth of the line''s entire 1.83 m of relief: forty-eight electrodes standing on seven contours.'
+
+  - id: F049
+    former_id: L13
+    title: "Two sources that disagree with a third and not with each other"
+    source: case3_llano
+    methods: [ert, seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A12
+    evidence: Sampled at these same stations, USGS 3DEP 1 m bare-earth lidar and the 1/3 arc-second DEM agree with each other to 6 cm and both sit 2.4 to 2.7 m above the release's table, carrying three quarters of its relief.
+
+  - id: F050
+    former_id: L14
+    title: "A declared cutoff with eleven metres of lever on the answer"
+    source: case3_llano
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A11
+    evidence: 'The resistivity''s resolved depth is the deepest cell whose coverage is within two decades of the best cell''s. Two decades was a bare assignment with no comment of its own, sharing a #: block with an unrelated constant, and it sits on a steep slope.'
+
+  - id: F051
+    former_id: L15
+    title: "One value off the grid every other value is on"
+    source: case3_llano
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: null
+    evidence: ERT2 at x = 108 m is 290.35 m = 952.592 ft, 0.408 ft from a whole foot, while every other value in both blocks is within 0.0144 ft — which is the .dat storing metres to two decimals.
+
+  - id: F052
+    former_id: L16
+    title: "A statistic taken where the claim does not live"
+    source: case3_llano
+    methods: [ert]
+    found_by: agent
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A14
+    covered_by: null
+    evidence: ERT1's diagnosis ruled out the model norm on the grounds that it "moved the 5–15 m band by 1 ohm.m". Both F042 arms said independently that the number is measured in the wrong place.
+
+  - id: F053
+    former_id: L18
+    title: "Two methods of one library are both called coverage() and return differently transformed arrays"
+    source: case3_llano
+    methods: [ert]
+    found_by: agent
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A15
+    covered_by: tests/test_interpretation.py
+    evidence: model_coverage.npy is ERTManager.coverage() written out verbatim, and in pyGIMLi that is log10(covTrans / paramSizes) — divided by cell area and logged.
+
+  - id: F054
+    former_id: L19
+    title: "A declared turn-off ramp a thousand times too short, and the rule that needed it"
+    source: case3_llano
+    methods: [tdem]
+    found_by: agent
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: tests/test_tem_dialects.py
+    evidence: /RAMP_TIME says 5.1e-9 s for the 1.5 A sweeps and 2.7e-8 s for the 9.5 A ones. The loop is about 0.73 mH, so switching 1.5 A out of it takes microseconds at any transmitter voltage, and the IX1D project for this same sounding holds 5.1 and 27 microseconds.
+
+  - id: F055
+    former_id: S1
+    title: "An interface nothing calls is an interface nobody has checked"
+    source: agent
+    methods: []
+    found_by: building
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A11
+    covered_by: tests/test_session.py
+    evidence: F055 is the gravity plugin estimating forty-one days for a run that takes minutes — an estimate is not evidence that a measurement is expensive, and a question declined on one is a question asked for nothing.
+
+  - id: F056
+    former_id: S2
+    title: "A repository that records its reasons cannot host a blind replay against itself"
+    source: agent
+    methods: []
+    found_by: agent
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A13
+    covered_by: null
+    evidence: The control arm was forbidden the whole agent package and got none of it, so the two arms were not asked the same question. The agent reported the leak itself, unprompted; nothing in the harness would have.
+
+  - id: F057
+    former_id: S4
+    title: "A keyword rubric scores the vocabulary of the answer, not the seeing"
+    source: agent
+    methods: []
+    found_by: building
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A6
+    covered_by: tests/test_screens.py
+    evidence: 'Recorded as F057, under A6: before using an index as a gate, measure its correlation with the outcome. A tell-keyword is such an index, and this is the third time keyword matching has misread an answer in this project.'
+
+  - id: F058
+    former_id: P1
+    title: "The magnetic field is the total field, not an anomaly"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: tests/test_aeromagnetic_import.py
+    evidence: "MAGDL has a median of 55,762 nT and a standard deviation of 907 nT over 917,961 readings."
+
+  - id: F059
+    former_id: P2
+    title: "There is no observation elevation"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A3
+    covered_by: tests/test_aeromagnetic_import.py
+    evidence: "The survey carries ALTBIRDM, the height of the bird above ground (median 34 m), and no elevation."
+
+  - id: F060
+    former_id: P3
+    title: "The Banded series is reversely magnetised"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: null
+    covered_by: null
+    evidence: "Blakely and Zientek (1985), quoted by Finn et al.: the Banded series \"is reversely magnetized with a natural remanent magnetization intensity comparable to the susceptibility\"."
+
+  - id: F061
+    former_id: P4
+    title: "The anomaly reaches 45% of the main field"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: null
+    covered_by: null
+    evidence: "Against a main field near 55,700 nT the anomaly runs from −4,399 to +25,345 nT. 5.98% of readings exceed 1,000 nT, 0.75% exceed 5,000 nT, and 0.147% (1,346 readings) exceed 10,000 nT."
+
+  - id: F062
+    former_id: P5
+    title: "The sampling is strongly anisotropic"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: judgement
+    procedure: A7
+    covered_by: tests/test_aeromagnetic_import.py
+    evidence: "1.6 m along line, 199 m between lines. Lateral resolution is capped by the line spacing, not by the along-line sampling: nothing finer than roughly 400 m across strike is resolved, whatever the along-line density suggests."
+
+  - id: F063
+    former_id: P6
+    title: "Drill depths are in feet"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: tests/test_borehole_import.py
+    evidence: "Every depth in the drill core release — collar total depth, and the From and To of every logged interval — is in feet."
+
+  - id: F064
+    former_id: P7
+    title: "Drill collars have no elevation"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A3
+    covered_by: tests/test_borehole_import.py
+    evidence: "Collars carry latitude and longitude and no elevation. As with F059, the elevation has to come from a DEM."
+
+  - id: F065
+    former_id: P8
+    title: "The boreholes can only validate the near surface"
+    source: case1_stillwater
+    methods: [boreholes, magnetic]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: C1
+    covered_by: null
+    evidence: "30 holes, spread over 35.6 × 13.3 km, all inside the airborne footprint, which is better spatial coverage than expected."
+
+  - id: F066
+    former_id: P9
+    title: "Only 7 of 30 holes are vertical, and none is surveyed"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: A3
+    covered_by: tests/test_borehole_import.py
+    evidence: "Inclinations run from −34° to −90°; azimuths are given at the collar."
+
+  - id: F067
+    former_id: P10
+    title: "The lithology tables are not all in one encoding"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: A3
+    covered_by: tests/test_borehole_import.py
+    evidence: "Four of the five are UTF-8 and SWTR_JM_Reef_drill_logs_lithology.csv is Windows-1252."
+
+  - id: F068
+    former_id: P11
+    title: "Inclination is measured from the other end"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A2
+    covered_by: tests/test_borehole_import.py
+    evidence: "The logs give inclination from horizontal with down negative: −90 is a hole going straight down, −34 is a shallow one."
+
+  - id: F069
+    former_id: P12
+    title: "A logged rock name can be a paragraph"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: A14
+    covered_by: tests/test_borehole_import.py
+    evidence: "Three of the hundred names exceed eighty characters, the longest being \"bronzite plagioclase cumulate/plagioclase cumulate/plagioclase bronzite cumulate/bronzite cumulate\"."
+
+  - id: F070
+    former_id: P13
+    title: "The data uncertainty is not the instrument noise"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: A4
+    covered_by: null
+    evidence: "The survey's own along-line fourth differences give 0.60 nT, which is a good airborne magnetometer."
+
+  - id: F071
+    former_id: P14
+    title: "A lithological log is not a stratigraphic log"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: judgement
+    procedure: A14
+    covered_by: tests/test_geology.py
+    evidence: "GeologicalModel.borehole_points() turns every logged contact into a surface point, which is right for a log that records a pile and wrong for one that records rock types."
+
+  - id: F072
+    former_id: P15
+    title: "A name cannot tell the Basal series from the Banded series"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: judgement
+    procedure: A14
+    covered_by: null
+    evidence: "Thirteen of the sixteen holes that see more than one unit cross them in the regional order downward: Banded series, Ultramafic series, metasedimentary footwall."
+
+  - id: F073
+    former_id: P16
+    title: "A library call with the wrong arguments returned plausible angles"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A2
+    covered_by: null
+    evidence: "ppigrf.get_inclination_declination takes the field's three components."
+
+  - id: F074
+    former_id: P17
+    title: "A run started by a process that then exits is lost"
+    source: case1_stillwater
+    methods: []
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: null
+    covered_by: tests/test_local_process_executor.py
+    evidence: "LocalProcessExecutor dispatches a daemon child, so a caller that starts a run and returns takes the run with it."
+
+  - id: F075
+    former_id: P18
+    title: "The reported misfit carries a factor of one half"
+    source: case1_stillwater
+    methods: [magnetic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: null
+    evidence: "SimPEG's phi_data is 0.5·Σ(r/σ)², so a reader computing chi-squared as phi_data / N gets half the true value."
+
+  - id: F076
+    former_id: null
+    title: "A finite-difference step below the forward model's noise makes a Jacobian of rounding error"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: B2
+    covered_by: null
+    evidence: "scipy's default relative step of 1.5 × 10⁻⁸ on a log-conductivity is below the forward model's own noise and produces a Jacobian of pure rounding error, which looks exactly like a converged local minimum."
+
+  - id: F077
+    former_id: null
+    title: "A datum no free model can reach is about the instrument, not the ground"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: measurable
+    procedure: B3
+    covered_by: tests/test_tem_import.py
+    evidence: "With all three applied, a *free* fifteen-layer fit — no regularization anywhere to blame for it — still misses the first gate by 60 to 80 per cent at most soundings while fitting the rest to a few per cent. A datum that no model of its own curve can reach is a datum about the instrument."
+
+  - id: F078
+    former_id: null
+    title: "A quality index is read by its distribution, not its centre"
+    source: case2_cedar_rapids
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: measurable
+    procedure: B4
+    covered_by: null
+    evidence: "SVP_S10 has not one pair over five per cent, and it is the one survey that fitted from the start. Every other has 72 to 201 of them, some disagreeing by a factor of two. A median of 0.26 per cent and a p95 of 163 per cent are the same data."
+
+  - id: F079
+    former_id: null
+    title: "A free parameter that rescues a fit is absorbing something else until its value is shown to be physical"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: B5
+    covered_by: null
+    evidence: "The scale was never correcting a static shift. It was absorbing the three-dimensionality of sites the contaminated screen had let in, and it would have been adopted, published, and reported as a distortion correction."
+
+  - id: F080
+    former_id: null
+    title: "An explanation borrowed from the other mode is a label, not a diagnosis"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: B5
+    covered_by: null
+    evidence: "The cause was recorded as static shift for a while, and that was wrong on its face: TE is the charge-insensitive mode, which is exactly why it was chosen over TM. Static shift is TM's problem, and it had already been used to explain why TM would not invert here; reusing it for TE made it a label rather than a diagnosis."
+
+  - id: F081
+    former_id: null
+    title: "A disagreement between two methods can be one method's prior against the other's data"
+    source: case1_forge
+    methods: [tdem, mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C1
+    covered_by: tests/test_interpretation.py
+    evidence: "in case 1 the TEM and the magnetotellurics appeared to disagree by a factor of 21 at 180 m, and most of that was one method's prior being compared with the other's data."
+
+  - id: F082
+    former_id: null
+    title: "A blanket hangs from the ground, and an implicit engine interpolates elevation"
+    source: case1_forge
+    methods: [tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: C2
+    covered_by: null
+    evidence: "GemPy interpolates a surface in absolute elevation, which is correct for a geological contact and wrong for a blanket: where the ground rises 200 m into the eastern granite outcrop the interpolated base does not rise with it, and the cover came out 239 m thick against a measured median of 73."
+
+  - id: F083
+    former_id: null
+    title: "A section's shares are a statement about where it was cut"
+    source: case1_stillwater
+    methods: [boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: C3
+    covered_by: null
+    evidence: "Cut through the centroid of the collars rather than along them, the section was 89% basement — not because the interpolation failed but because almost any box drawn around these holes is mostly ground nothing constrains."
+
+  - id: F084
+    former_id: null
+    title: "\"It ran\" and \"it wrote a file\" are not \"the next stage can read it\""
+    source: case2_cedar_rapids
+    methods: [fdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C4
+    covered_by: tests/test_obligations.py
+    evidence: "Twice in one case a 1,374-sounding inversion ran to completion before anything checked it: once it had a convention wrong and returned chi-squared 29 for every sounding, once it wrote its section into the runs root where the next run would overwrite it. Each cost half an hour. The five-sample walk that would have caught either took three minutes, and the second failure was a path, which no amount of numerical care would have found."
+
+  - id: F085
+    former_id: null
+    title: "A rule that declined to judge still labelled the ground"
+    source: case1_forge
+    methods: [mt]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C5
+    covered_by: tests/test_interpretation.py
+    evidence: "The intermediate conductor rule declines to judge 11.0 per cent of the volume, which lies further from any magnetotelluric site than its 2 km reach. Those cells fall through to basin fill, and until the service reported it the model was saying \"not the conductor\" over ground nothing had measured."
+
+  - id: F086
+    former_id: null
+    title: "A remainder given a unit's name absorbs its own mistakes"
+    source: case3_llano
+    methods: [ert, tdem]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C5
+    covered_by: null
+    evidence: "The first version of this model made the aquifer a bare remainder — everything the granite rule did not take — so the resistivity lines set the footprint and assigned nothing, and 40 per cent of the volume was labelled by a rule that had looked at no data."
+
+  - id: F087
+    former_id: null
+    title: "SUCCEEDED and a chi-squared are not a fit"
+    source: case2_cedar_rapids
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: null
+    covered_by: tests/test_gates.py
+    evidence: "A run is delivered when it fits, not when it converges. The first version of the report called every one of these complete, because each was SUCCEEDED and each had a chi-squared — a test of the harness rather than of the result."
+
+  - id: F088
+    former_id: null
+    title: "A resistivity boundary is not a rock contact"
+    source: case2_cedar_rapids
+    methods: [fdem, boreholes]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A14
+    covered_by: null
+    evidence: "The profile rises smoothly through the contact and peaks 12 m below it. **There is no resistivity feature where the rock changes.** So the resistive body this case maps is not the aquifer: at GX-2 everything it contains below 16 m is limestone, and the unit is named for that rather than for what would be convenient."
+
+  - id: F089
+    former_id: null
+    title: "A vendor parser can filter the survey and say nothing"
+    source: case2_cedar_rapids
+    methods: [ert]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A15
+    covered_by: null
+    evidence: "the vendor path this project already has is recorded as having applied its own reciprocal filter and returned 24 measurements of 264 with nothing saying so."
+
+  - id: F090
+    former_id: null
+    title: "The refusal count measures the first draft, not the answer"
+    source: agent
+    methods: []
+    found_by: building
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A6
+    covered_by: null
+    evidence: "So the sentence this section used to carry — the refusal fired in every treatment run — was true and was not evidence of what it was being used for. The refusal count measures the first draft, not the answer."
+
+  - id: F091
+    former_id: null
+    title: "A published depth-of-investigation mask can leak, and the leak reads as a conductor"
+    source: case2_cedar_rapids
+    methods: [fdem]
+    found_by: agent
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C1
+    covered_by: null
+    evidence: "layers 25 to 27 are not a conductor but mask leakage, all 294 of their values sitting at or below their own sounding's depth of investigation, layer 25 beginning deeper than the deepest DOI in the survey."
+
+  - id: F092
+    former_id: null
+    title: "A shift that moves every dataset together changes no relation between them"
+    source: case3_llano
+    methods: [ert, boreholes]
+    found_by: agent
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A11
+    covered_by: null
+    evidence: "The borehole log carries depths in feet and no collar elevation, so it is placed by depth below whatever ground the model uses: the hole moved with the section and their relation did not change. The 2.4 m is a translation and buys a datum."
+
+  - id: F093
+    former_id: null
+    title: "Preprocessing applied to one side of a misfit makes the residual the data"
+    source: soda_lake
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: false
+    decision: none
+    procedure: B3
+    covered_by: null
+    evidence: "Preprocessing was applied to the observed data only. The first run sat at a relative misfit of 0.9999998 for every iteration and moved nothing."
+
+  - id: F094
+    former_id: null
+    title: "A stability limit checked on the starting model does not hold for the model the inversion walks to"
+    source: soda_lake
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A7
+    covered_by: null
+    evidence: "The validator checks the Courant and dispersion limits against the starting model, and the inversion moves the model: the shear velocity walked from 375 m/s down through 305 to 178, at which point there are 2.2 cells per shear wavelength and the wavefield is numerical dispersion. The misfit fell the whole way, because a dispersive wavefield fits data too."
+
+  - id: F095
+    former_id: null
+    title: "A channel that was never at a station becomes a receiver at the map origin"
+    source: soda_lake
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A1
+    covered_by: null
+    evidence: "One station four thousand kilometres away dominates that fit, so the direction swings onto the bearing of the origin and every channel's along-line position is projected onto the wrong axis. The line length stays plausible, the positions stay monotonic, and they are all wrong."
+
+  - id: F096
+    former_id: null
+    title: "A step that rebuilds a declaration from defaults inverts something other than what was approved"
+    source: soda_lake
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A10
+    covered_by: null
+    evidence: "the workbench's selection step was rebuilding the header mapping from the standard defaults rather than reusing what the import was declared with. On a file stored in decimetres that is a factor of ten between a summary the user approved and the geometry actually inverted"
+
+  - id: F097
+    former_id: null
+    title: "A phase-blind stage can walk a right starting model away before the phase is ever fitted"
+    source: soda_lake
+    methods: [seismic]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: measurable
+    procedure: null
+    covered_by: null
+    evidence: "The deeper point is that the starting model was right about this — Vs 368 gives a 339 m/s Rayleigh wave against the measured 335, a fifth of a cycle at the far offset — and the envelope stages walked it 22% away before L2 ever ran."
+
+  - id: F098
+    former_id: null
+    title: "Two answers that start from the same surface are one answer"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: B7
+    covered_by: null
+    evidence: "It knew it from the first iteration: both gravity inversions are started from, and referenced to, the two-layer model split at that surface (`_reference_model` in `scripts/case1_forge.py`), and gravity says little about depth on its own. Two answers that start from the same surface are one answer, and a figure within a point of its own starting model is the prior coming back."
+
+  - id: F099
+    former_id: null
+    title: "The surface the delivery did not ship was in its workspace file"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: A8
+    covered_by: null
+    evidence: "Model 1's surface was in the folder all along: the delivery's Geoscience Analyst workspace, `UtahFORGE_3D_Gravity_Models_May2019.geoh5`, holds both surfaces as triangulated objects, *Original Top of Granite Surface* and *Modified Top of Granite Surface*, beside both density models."
+
+  - id: F100
+    former_id: null
+    title: "Two runs that rest on the same bound agree exactly"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C1
+    covered_by: null
+    evidence: "Two runs that rest on the same bound agree exactly, so R is zero and the cell reads as determined: 387 of the 18,833 cells the weighted test calls resolved, and 634 of 10,972 unweighted, are both runs pinned at the same bound, most of them at the 3.02 ceiling a little below the ground. That is the solver saturating twice."
+
+  - id: F101
+    former_id: null
+    title: "A column keyed by a cell's centre on an octree loses the ground beneath it"
+    source: case1_forge
+    methods: [gravity]
+    found_by: development
+    tier: measured
+    silent: true
+    decision: none
+    procedure: C1
+    covered_by: null
+    evidence: "The first version of this map counted a coarse octree cell in a column of its own, keyed by its centre, so the deep ground was missing from the columns above it and the map came out striped; drawn, it was obviously wrong, and its shares had looked reasonable."

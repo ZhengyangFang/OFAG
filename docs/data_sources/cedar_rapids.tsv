@@ -1,0 +1,29 @@
+# Cedar Rapids case data, and where every byte came from.
+#
+# Two USGS data releases, both public and both re-fetchable from the DOI. Files
+# are renamed for legibility where the release's own names are long; the
+# original name is recorded, because a renamed file that cannot be matched back
+# to its delivery is a file with no provenance.
+#
+# Nothing here is derived. Where a later stage crops or converts one of these,
+# it says so in the file it writes and in docs/case2_cedar_rapids.md.
+
+path	original_name	doi	what_it_is
+ert/Edwd_CW3_5m.zip	Edwd_CW3_5m.zip	10.5066/P9YXJDHX	Edwards CW3: dipole-dipole, Schlumberger, inverse Schlumberger, and a combined file.
+ert/Ellis_CW1_5m.zip	Ellis_CW1_5m.zip	10.5066/P9YXJDHX	Ellis CW1, as three nested zips one per array. Its README endpoints span 477 m against a 275 m electrode line; trust the electrodes.
+ert/SVP_CW6_5m.zip	SVP_CW6_5m.zip	10.5066/P9YXJDHX	Seminole Valley Park CW6: dipole-dipole and inverse Schlumberger. No Schlumberger, though the metadata says three arrays everywhere.
+ert/SVP_S10_5m.zip	SVP_S10_5m.zip	10.5066/P9YXJDHX	Seminole Valley Park S10: dipole-dipole and inverse Schlumberger. No Schlumberger.
+ert/SVPDemo-Day_5m.zip	SVPDemo-Day_5m.zip	10.5066/P9YXJDHX	Seminole Valley Park demonstration line: all three arrays.
+ert/README.txt	Read_Me_ERT_CR-IA.txt	10.5066/P9YXJDHX	The release's own note. Documents the .stg, .crs and .cmd formats field by field, and gives each site's endpoints.
+ert/archive_notes.pdf	ERT_Archive_Notes_CedarRapids.pdf	10.5066/P9YXJDHX	Field notes for the archive.
+ert/metadata.xml	Cedar-Rapids_ERT_Metadata.xml	10.5066/P9YXJDHX	FGDC metadata. States 15 surveys; 13 are present.
+aem/measured.csv	CedarRapidsAEM_2017_measuredData.csv	10.5066/P9BS882S	139,602 RESOLVE soundings, six frequencies, in-phase and quadrature in ppm, plus magnetics and altimetry. What this case inverts.
+aem/inversion_EM1DFM.csv	CedarRapidsAEM_2017_inversion_EM1DFM.csv	10.5066/P9BS882S	The contractor's EM1DFM inversion, 28 layers per sounding with a depth of investigation. The independent check.
+aem/data_dictionary.csv	CedarRapidsAEM_2017_Data_Dictionary.csv	10.5066/P9BS882S	Defines every column of both CSVs.
+aem/report.pdf	CedarRapidsAEM_Contractor's_report.pdf	10.5066/P9BS882S	CGG's survey and processing report. The source for the system, the frequencies and the calibration.
+aem/metadata.xml	Airborne_electromagnetic_and_magnetic_survey_data_and_inverted_resistivity_models_CedarRapids_Iowa_May2017.xml	10.5066/P9BS882S	FGDC metadata for the AEM release.
+wells/GX-1.pdf	GX-1_420031091443301_Composite.pdf	10.5066/P9YXJDHX	Borehole NMR, natural gamma and induction, June 2017. Inside the model volume. 18.4 m deep, does not reach rock.
+wells/CRM-4A.pdf	IA_CRM-4A_415953091435302_Composite.pdf	10.5066/P9YXJDHX	Inside the model volume. No bedrock pick in the text layer.
+wells/CRM-6A.pdf	IA_CRM-6A_415954091435302_Composite.pdf	10.5066/P9YXJDHX	Inside the model volume. Its lithology column names limestone, but the depth is drawn rather than written.
+wells/GX-2.pdf	IA_GX-2_415954091440401_Composite.pdf	10.5066/P9YXJDHX	Inside the model volume, and the only one with a numeric bedrock pick: shaley limestone at 55 ft below a casing top 0.73 m above ground, so 16.0 m below ground.
+wells/metadata.xml	Cedar-Rapids_IA_BH-Geophysics.xml	10.5066/P9YXJDHX	FGDC metadata for the borehole geophysics. Five further wells sit outside the volume and were not fetched.

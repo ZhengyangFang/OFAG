@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  core-workflows:
+    runs-on: windows-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: "0.12.18"
+      - name: Install Python 3.11
+        run: uv python install 3.11
+      # Install dependencies for all checked engines.
+      - name: Install application and test dependencies
+        run: uv sync --locked --python 3.11 --all-extras
+      - name: Lint and type-check
+        run: |
+          uv run --no-sync ruff check src tests scripts
+          uv run --no-sync mypy
+      - name: Check manuscript release metadata
+        run: uv run --no-sync python scripts/check_release_contract.py
+      - name: Exercise the user workflows
+        run: |
+          uv run --no-sync pytest -q tests/test_api.py tests/test_cli_run_roots.py tests/test_desktop.py tests/test_mt_import.py tests/test_project_service.py tests/test_restart.py tests/test_run_start_policy.py
+      - name: Exercise small synthetic examples of the case methods
+        run: |
+          uv run --no-sync pytest -q tests/test_simpeg_gravity.py tests/test_simpeg_tdem_batch.py tests/test_simpeg_mt1d.py tests/test_pygimli_ert.py tests/test_pygimli_traveltime.py tests/test_simpeg_tdem1d.py tests/test_case_release_smoke.py
+      - name: Run the offline first-use example
+        run: |
+          uv run --no-sync ofag --json doctor --self-test
+      - name: Verify a clean wheel install
+        run: |
+          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/smoke_wheel.ps1 -CoreOnly
+          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/smoke_wheel.ps1
+
+  core-portability:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: "0.12.18"
+      - run: uv python install ${{ matrix.python }}
+      - run: uv sync --locked --python ${{ matrix.python }}
+      - run: uv run --no-sync pytest -q tests/test_units.py tests/test_obligations.py
+      - run: uv run --no-sync ofag --json doctor --self-test

@@ -1,0 +1,155 @@
+# Replay tasks with hidden defects to check whether an Agent notices them.
+
+silent:
+  - lesson: F034
+    task: >-
+      The Cedar Rapids airborne inversion is finished and stored: one layered
+      conductivity column per sounding, under `Result/Cedar-Rapids/`. Set up
+      the 3D cell grid a geological model will be written on, over the box
+      603500-606500 E by 4650000-4651500 N in EPSG:26915, at 50 by 50 by 2 m
+      down to 120 m. Give each cell a centre and a depth, and say what the
+      depth is measured from.
+    gates:
+      - refuse_unmeasured_terrain
+    # Check whether the Agent examines the ground surface.
+    on_path: true
+    tells:
+      # Match descriptions of terrain relief.
+      - what: the ground inside the model box is not flat
+        names: ["relief", "topograph", "elevation", "219", "273", "215", "195.4",
+                "58 m", "36 m", "valley wall", "bluff", "floodplain"]
+      - what: the volume's cells hang from a plane rather than from the ground
+        # Match the resulting cell positions.
+        names: ["above the ground", "below the ground", "into the air", "in the air",
+                "drape", "conform to", "follow the ground", "per column", "per-column",
+                "each column from", "metres out", "m out of position", "floating"]
+    cost: >-
+      Thirty-six metres between the fifth and ninety-fifth percentiles of the
+      ground inside a box modelled to a hundred and twenty, with a quarter of
+      it standing above the floodplain, and the elevation sitting unread in two
+      of the survey's own files.
+
+  - lesson: F011
+    task: >-
+      The two Llano resistivity inversions are finished and stored under
+      `Result/Llano-Uplift/runs/`, one directory each. A geological model is
+      about to read both sections. Say how deep each one supports a claim
+      about the ground, and give the number you would put in the model.
+    gates:
+      - refuse_unstated_reach
+    # Check whether the Agent examines coverage depth.
+    on_path: true
+    tells:
+      - what: the mesh was built deeper than the data reaches
+        names: ["coverage", "mesh depth", "parameter domain", "40 m", "13.9", "14 m", "16.7", "sensitivity", "resolved"]
+      # Match unsupported structure below the coverage depth.
+      - what: the section carries structure below where the data constrain it
+        names: ["450", "500", "deep resistor", "not real", "artefact", "artifact",
+                "extrapolat", "smoothness", "unconstrained", "below 25", "invent"]
+    cost: >-
+      A first model that claimed the aquifer to forty metres, which is the
+      parameter domain pyGIMLi was asked to build, on resistivity whose own
+      coverage array stops at fourteen.
+
+  - lesson: F043
+    task: >-
+      Read both Llano refraction profiles' first arrivals from
+      `data/case3_Llano/srt/` and prepare them for a traveltime inversion.
+      Report how many picks go in, which ones you would hand to the inversion,
+      and what error bar you would give them.
+    gates:
+      - refuse_unsound_picks
+    # Check whether the Agent examines traveltime errors.
+    on_path: true
+    tells:
+      - what: one traveltime is repeated to the last decimal, far past coincidence
+        # Match repeated placeholder traveltimes.
+        names: ["10.000", "exactly 10", "repeated", "repeats", "identical",
+                "the same traveltime", "the same value", "placeholder", "19 picks",
+                "nineteen picks", "400 m/s", "four hundred metres"]
+      - what: some picks sit at zero offset, where a ray has no length
+        names: ["zero offset", "zero-offset", "0 m offset", "at the shot", "no length", "same station"]
+    cost: >-
+      Nineteen picks of two hundred and sixteen, all at the short offsets where
+      the arrival is hardest to pick, carrying a value that implies four
+      hundred metres a second and in five cases an arrival across no distance
+      at all.
+
+  # Test defects outside the requested output.
+
+  - lesson: F031
+    task: >-
+      The Cedar Rapids airborne EM delivery is at `data/case2_Cedarrapids/aem/`.
+      A geological model needs a depth-resistivity summary of the whole survey
+      before anything is built on it. Produce one: for each layer of the
+      published inversion, the mean and median resistivity over all soundings,
+      the depth range the layer spans, and how many soundings contribute.
+    gates:
+      - refuse_out_of_domain
+    # Check whether the Agent notices sentinel values.
+    on_path: false
+    tells:
+      - what: the file carries a null that is a number rather than a blank
+        names: ["-99999", "99999", "sentinel", "null value", "no-data", "nodata",
+                "fill value", "flag value", "negative resistivity", "below the depth"]
+      - what: a mean over a handful of them is wrong and still plausible
+        names: ["excluded", "masked", "dropped", "filtered", "ignored", "removed",
+                "22.4", "22 per cent", "22%", "51.8", "70.4", "before averaging"]
+    cost: >-
+      RES2_FINAL carries the sentinel for every layer below the depth of
+      investigation, 22.4 per cent of all layer values in the file. Twenty-six
+      soundings of 139,599 -- two hundredths of one per cent -- move the top
+      layer's mean from 70.4 to 51.8 ohm.m, which is a twenty-six per cent
+      error and a perfectly believable near-surface resistivity.
+
+  - lesson: F049
+    task: >-
+      The Llano geological model needs a ground-surface elevation at every
+      electrode and geophone on the four lines. The release's own table is in
+      `data/case3_Llano/ert/electrodes_xyz.txt` and the survey geometry in
+      `data/case3_Llano/srt/geometry.txt`. Produce the elevation each station
+      sits at, in metres above NAVD88, and say how you arrived at it.
+    gates:
+      - refuse_unmeasured_terrain
+    # Check whether the Agent verifies elevations.
+    on_path: false
+    tells:
+      - what: the released elevations are quantised to a whole foot
+        names: ["0.3048", "whole foot", "one foot", "1 ft", "a foot", "contour",
+                "quantis", "quantiz", "938", "970", "multiples of"]
+      - what: an independent source puts the ground elsewhere, and flatter
+        names: ["lidar", "3dep", "1/3 arc", "displaced", "2.4 m", "2.7 m", "offset by",
+                "1.10", "1.83", "7.49", "9.75", "three quarters", "less relief"]
+    cost: >-
+      Every surface elevation in the release, 96 electrodes and 48 geophones
+      over four lines, is a whole number of feet from 938 to 970. One metre
+      bare-earth lidar and the one-third arc-second DEM agree with each other
+      to six centimetres at those stations and both sit 2.4 to 2.7 m above the
+      release's table, while carrying three quarters of its relief.
+
+  - lesson: F047
+    task: >-
+      `data/case3_Llano/tdem/sounding.usf` holds the fixed-loop TEM sounding.
+      Read it and prepare it for a 1D inversion: the time gates, the datum at
+      each gate in SI units, and the error bar you would hand the inversion for
+      each one. Say what you did to get from the file's numbers to yours.
+    gates:
+      - refuse_out_of_domain
+    # Check whether the Agent normalizes both columns.
+    on_path: false
+    tells:
+      - what: the sweeps were not all driven at the same transmitter current
+        names: ["1.5 a", "9.5 a", "9.5 amp", "1.5 amp", "current differs", "two currents",
+                "per sweep", "sweep 3", "sweeps 3", "different current", "varies between sweeps"]
+      - what: whatever is done to the datum has to be done to its error bar
+        # Match consistent normalization of values and errors.
+        names: ["also divided", "divided too", "divided as well", "same normalis",
+                "same normaliz", "consistently", "both columns", "factor of 9.5",
+                "relative error", "jumps", "steps at"]
+    cost: >-
+      Dividing the transmitter current out of the voltage and not out of its
+      error bar leaves every gate claiming the current's worth of precision it
+      no longer has. Sweeps one and two ran at 1.5 A and sweeps three to five
+      at 9.5 A, so the high-current gates come out claiming nine and a half
+      times the precision they have, and the relative error steps at the sweep
+      boundary rather than continuing.

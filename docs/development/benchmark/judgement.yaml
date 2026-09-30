@@ -1,0 +1,205 @@
+# Replay past decisions without revealing their answers.
+
+replays:
+  - lesson: F037
+    question: >-
+      A resistivity release states the elevation of its 48 electrodes twice,
+      in two places, and the two statements disagree. Nothing in the release
+      marks the disagreement or says which is authoritative. Which does the
+      inversion use, and what does the choice cost?
+    probe: scripts/development/replays/F037.py
+    expect: judged
+    must_name:
+      - ["second difference", "scatter", "smooth", "shape", "implausib", "60 per cent", "60%"]
+      - ["2.4", "2.44"]
+    historical:
+      question: Which of a release's two disagreeing elevation lists does the section sit on?
+      options:
+        - name: the topography block inside each .dat
+          cost: >-
+            steps up to 2.4 m between electrodes 4 m apart, a 60 per cent slope on a line
+            whose whole fall is 5 per cent, and places the section on that shape
+        - name: the separate electrodes_xyz.txt table
+          cost: >-
+            disagrees with the file the instrument's own software would read, and places
+            the section up to 2.44 m from where that file puts it
+      chose: the separate electrodes_xyz.txt table
+      because: >-
+        the embedded block steps up to 2.4 m between electrodes 4 m apart, which is a 60 per
+        cent slope on a line whose whole fall is 5 per cent; measured as the scatter of the
+        second difference the table is 0.23 and 0.25 m against the block's 1.35 and 1.99
+      settlement: judged
+      informed_by:
+        - inverted both ways and flat, giving 3.090, 3.165 and 3.074, which discriminates nothing
+        - the two lists hold the same 48 values on profile 1 and different sets on profile 2
+      reverses_if: >-
+        a third elevation source appears, or anything this section is compared against is
+        controlled vertically to better than the 2.44 m the two lists differ by
+      recorded_at: scripts/case3_llano.py::ELEVATION_SOURCE
+      lesson: F037
+
+  - lesson: F043
+    question: >-
+      In two first-arrival pick files, one traveltime recurs to the last
+      decimal — five times in one file and fourteen in the other — always at
+      the short offsets around a shot. Every other pick in the files carries
+      six decimals. Is the repeated value a measurement, and what goes into
+      the inversion?
+    probe: scripts/development/replays/F043.py
+    expect: judged
+    must_name:
+      - ["default", "placeholder", "floor", "not a measurement", "unpicked"]
+      - ["exact", "last decimal", "six decimal", "repeat"]
+    historical:
+      question: Is a traveltime that recurs exactly, at the short offsets, a measurement?
+      options:
+        - name: keep them
+          cost: >-
+            nineteen picks enter the inversion claiming a plausible 400 m/s at 4 m offset
+            and an impossible one at zero offset, and they sit where the model is most
+            sensitive
+        - name: drop every pick at that exact value
+          cost: >-
+            loses 5 of 120 and 14 of 96 picks, all at short offset, where the shallowest
+            layer is best constrained
+      chose: drop every pick at that exact value
+      because: >-
+        the tell is exactness: real picks in these files carry six decimals and this one is
+        10.000000 nineteen times, always within a few stations of the shot, and at zero
+        offset it implies nothing at all
+      settlement: judged
+      informed_by:
+        - picks of 9.824417 ms sit below it, so it is not an instrument floor
+        - read as a measurement it implies 400 m/s at 4 m offset and 1600 m/s at 16 m
+      reverses_if: >-
+        the picking program's documentation turns up and states what it writes for a trace
+        nobody picked, or a raw record shows an arrival at that time
+      recorded_at: scripts/case3_llano.py::PICK_DEFAULT_S
+      lesson: F043
+
+  - lesson: F042
+    question: >-
+      Two regularization norms were added to a resistivity plugin for this
+      case, because the release's own authors used them and because a
+      weathering front is the sharp boundary the default norm cannot place.
+      Measured where the authors read their number, they nearly double it.
+      Keep the
+      capability or remove it?
+    probe: scripts/development/replays/F042.py
+    expect: judged
+    must_name:
+      - ["nothing", "unused", "not used", "no other", "one test"]
+      - ["rule out", "establish", "ask the question", "could not have", "negative"]
+    historical:
+      question: Keep a plugin capability that was added, measured, and changed nothing?
+      options:
+        - name: remove them
+          cost: >-
+            twenty-five lines and one test go, and the question of whether the norm explains
+            the misfit can no longer be asked without writing them again
+        - name: keep them
+          cost: >-
+            the plugin carries two fields nothing in the project sets, exercised only by the
+            test written for them
+      chose: keep them
+      because: >-
+        establishing that the norm is not the explanation required being able to change it,
+        and a plugin that can only do L2 cannot answer the question at all; the two are
+        separate switches because robust data weighting makes an outlier tail stop counting
+        rather than stop existing
+      settlement: judged
+      informed_by:
+        - blocky L1 takes the x = 48-76 m window from 151 to 263 ohm.m at the median and 312 to 619 at the maximum, and chi squared from 3.079 to 2.703 -- recorded as 1 ohm.m until two replay arms measured it in the window instead of over the whole line
+        - robust data weighting on top of it did less
+      reverses_if: >-
+        a second case adds a capability on the same argument and also finds it changes
+        nothing, at which point the pattern is the problem rather than this instance
+      recorded_at: scripts/case3_llano.py::ERT_LAMBDA
+      lesson: F042
+
+  - lesson: F002
+    blocked_by: >-
+      The delivered anomaly's reduction density is in the README and the
+      modelling one is eleven pages into report.pdf. Nothing in this project
+      reads PDFs, and taking the number from SOURCES.tsv instead would be
+      reading this project's own annotation of the answer.
+    question: >-
+      A gravity delivery ships a complete Bouguer anomaly column and states,
+      in its README and again in its ArcGIS metadata, the reduction density
+      used to produce it. Eleven pages into the modelling report in the same
+      folder, a different reduction density is given for the modelling.
+      Neither is wrong. Which does an inversion of that column assume?
+    probe: null
+    expect: judged
+    must_name:
+      - ["two", "both", "twice"]
+      - ["delivered", "column", "the data"]
+    historical: null
+
+  - lesson: F024
+    probe: scripts/development/replays/F024.py
+    caveat: >-
+      Partly altered. The release's warning about the second model is in its
+      README and still readable, but the surface file was renamed on the way
+      into this project from a neutral name to one ending TEST, which is part
+      of the warning the original situation did not carry. The probe says so.
+    question: >-
+      A gravity folder ships two published density models on the same mesh.
+      Both fit the same 323 stations to the same misfit — 0.0301 and 0.0299
+      mGal RMS — and differ from each other by 0.0283 g/cm³ RMS across
+      225,063 of their 268,773 cells. Which is the reference model?
+    expect: judged
+    must_name:
+      - ["delivery", "readme", "says", "states"]
+      - ["equally", "same misfit", "both fit"]
+    historical: null
+
+  - lesson: F015
+    probe: scripts/development/replays/F015.py
+    question: >-
+      A layered earth has one impedance and a magnetotelluric tensor has
+      four numbers. Something has to reduce the second to the first before a
+      1D inversion can run. Which scalar?
+    expect: judged
+    must_name:
+      - ["off-diagonal", "xy", "yx", "determinant"]
+      - ["not", "is not", "rather than"]
+    historical: null
+
+  - lesson: F014
+    blocked_by: >-
+      Not by missing data, by the repository the agent stands in. The screen
+      this question asks for is implemented in
+      src/ofag/services/mt_import.py: the phase tensor's skew angle, refused
+      above three degrees. Forbidding that file leaves an agent unable to see
+      how magnetotellurics is imported at all, and allowing it hands over the
+      answer. A replay whose fix lives in the source is not blind, and this
+      one was listed runnable until somebody tried to run it.
+    probe: scripts/development/replays/F014.py
+    question: >-
+      122 magnetotelluric sites, a layered inversion that will accept all of
+      them, and ground that is not everywhere layered. A site that is not
+      layered still returns a conductivity profile, a chi squared and a
+      residual plot. Which sites are admitted?
+    expect: judged
+    must_name:
+      - ["screen", "admit", "reject", "cutoff", "skew"]
+      - ["dimension", "layered", "1d", "one-dimensional"]
+    historical: null
+
+  - lesson: F009
+    blocked_by: >-
+      The class was derived from well 58-32's cuttings, which the Utah FORGE
+      trim from 338 MB to 63 MB removed. The release directory is still here
+      and the evidence is not, which is why data_present is not replayability.
+    question: >-
+      A petrophysically guided inversion takes rock classes, each a mean and
+      a spread. Three of the four here are rocks. The fourth, shallow basin
+      fill, is a depth trend: cuttings give it falling from about 2.4 g/cm³
+      at 660 m to about 2.0 at surface. Is it a class?
+    probe: null
+    expect: judged
+    must_name:
+      - ["gradient", "trend", "depth", "not a value"]
+      - ["midpoint", "2.2", "spread", "half-range"]
+    historical: null

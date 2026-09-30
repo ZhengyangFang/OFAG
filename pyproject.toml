@@ -1,0 +1,115 @@
+[project]
+name = "ofag"
+version = "0.1.0"
+description = "One Framework for All Geophysics"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "fastapi>=0.115,<1",
+  "numpy>=2,<3",
+  "pandas>=2.2,<3",
+  "pint>=0.24,<1",
+  "pydantic>=2.10,<3",
+  "pyproj>=3.7,<4",
+  # Compute magnetic anomalies from total-field measurements.
+  "ppigrf>=2.1,<3",
+  "pyyaml>=6,<7",
+  "typer>=0.15,<1",
+  "uvicorn>=0.34,<1",
+  "xarray>=2024.10,<2027",
+  "zarr>=3,<4",
+]
+
+[project.optional-dependencies]
+# Run the desktop interface.
+desktop = ["pyside6>=6.7,<7"]
+# Read additional table and raster formats.
+tables = ["openpyxl>=3.1,<4", "pyogrio>=0.10,<1"]
+raster = ["rasterio>=1.3,<2"]
+# Run SimPEG inversions and petrophysical guidance.
+simpeg = ["choclo>=0.3,<1", "scikit-learn>=1.5,<2", "simpeg>=0.25,<0.26"]
+# Run pyGIMLi resistivity and induced-polarisation inversions.
+pygimli = ["pygimli==1.5.5.post1", "pgcore==1.5.5.post1"]
+# Read resistivity instrument formats.
+ert-formats = ["PyHydroGeophysX>=0.3,<1"]
+# Interpolate geological surfaces.
+gempy = [
+    "gempy>=2026.0.3,<2027",
+    "gempy-engine>=2026.0.3,<2027",
+]
+# Read land-seismic data and run 2D wave propagation.
+seismic = [
+    "deepwave>=0.0.20,<0.1",
+    "segyio>=1.9,<2",
+    "torch>=2.4,<3",
+]
+# Expose Agent tools through MCP.
+mcp = ["mcp>=1.2,<2"]
+
+[project.scripts]
+ofag = "ofag.cli.main:app"
+
+[dependency-groups]
+dev = [
+  "httpx>=0.28,<1",
+  "mypy>=1.14,<2",
+  "pytest>=8,<9",
+  "pytest-cov>=6,<7",
+  "ruff>=0.9,<1",
+  "types-pyyaml>=6.0.12,<7",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src", "README.md", "LICENSE", "pyproject.toml", "tests", "docs", "examples", "scripts"]
+exclude = [
+  "/examples/*.pptx",
+  "**/~$*",
+  "/examples/*.ipynb",
+]
+
+[tool.hatch.build.targets.wheel.force-include]
+# Bundle documents read by the installed Agent.
+"docs/agent_validation_and_debugging.md" = "ofag/_resources/docs/agent_validation_and_debugging.md"
+"docs/architecture.md" = "ofag/_resources/docs/architecture.md"
+"docs/case1_forge.md" = "ofag/_resources/docs/case1_forge.md"
+"docs/case2_cedar_rapids.md" = "ofag/_resources/docs/case2_cedar_rapids.md"
+"docs/case3_llano.md" = "ofag/_resources/docs/case3_llano.md"
+"docs/interpretation.md" = "ofag/_resources/docs/interpretation.md"
+"docs/tdem1d_configuration.md" = "ofag/_resources/docs/tdem1d_configuration.md"
+"docs/unit_policy.md" = "ofag/_resources/docs/unit_policy.md"
+"docs/knowledge" = "ofag/_resources/docs/knowledge"
+"docs/lessons/lessons.yaml" = "ofag/_resources/docs/lessons/lessons.yaml"
+"docs/development/case1_forge_history.md" = "ofag/_resources/docs/development/case1_forge_history.md"
+"docs/development/case2_cedar_rapids_history.md" = "ofag/_resources/docs/development/case2_cedar_rapids_history.md"
+"docs/development/case3_llano_history.md" = "ofag/_resources/docs/development/case3_llano_history.md"
+"docs/development/stillwater.md" = "ofag/_resources/docs/development/stillwater.md"
+"docs/development/plugin_contract_evolution.md" = "ofag/_resources/docs/development/plugin_contract_evolution.md"
+"docs/development/seismic_engine_selection.md" = "ofag/_resources/docs/development/seismic_engine_selection.md"
+"docs/development/seismic_field_data.md" = "ofag/_resources/docs/development/seismic_field_data.md"
+"docs/development/benchmark/judgement.yaml" = "ofag/_resources/docs/development/benchmark/judgement.yaml"
+"docs/development/benchmark/silent.yaml" = "ofag/_resources/docs/development/benchmark/silent.yaml"
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+# Exclude figure notebooks from library linting.
+extend-exclude = ["examples/*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+# Type-check the source package.
+files = ["src/ofag"]
+mypy_path = "src"

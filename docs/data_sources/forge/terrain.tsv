@@ -1,0 +1,4 @@
+# Derived local raster from USGS 3DEP 1 arc-second terrain; no registered DOI is asserted.
+# This file is clipped and reprojected for the case, so it is not an original delivery basename.
+name	source_collection	local_processing
+dem/forge_3dep_30m.tif	USGS 3DEP 1 arc-second	clipped and reprojected to EPSG:26912

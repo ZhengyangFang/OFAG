@@ -1,0 +1,1 @@
+"""OFAG command line entrypoint."""

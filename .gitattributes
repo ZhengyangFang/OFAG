@@ -1,0 +1,9 @@
+# Store and check out text files with LF so formatting tools, Python and the
+# Vite toolchain agree on line endings across Windows and Linux checkouts.
+* text=auto eol=lf
+
+# Binary fixtures must never be line-ending converted.
+*.npy binary
+*.png binary
+*.tar.gz binary
+*.zip binary

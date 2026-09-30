@@ -1,0 +1,20 @@
+# Gravity files, renamed for legibility.
+#
+# The delivery's names are long and say the same words in a different order, so the
+# folder was unreadable at a glance. They are shortened here and recorded below,
+# because a renamed file that cannot be matched back to its delivery is a file with
+# no provenance -- and the identifiers are in docs/case1_forge.md, keyed by the
+# original names.
+#
+# Source releases: doi:10.15121/1542061 and doi:10.15121/1452733.
+
+name	original_name	what_it_is
+stations_2c.txt	FORGE_2C_finalCBGA.txt	518 Phase 2C stations. The gCBGA column is what this case inverts.
+published_model.csv	UtahFORGE_1_Original_Top_Granite_Density_Model.csv	Witter 2019 model 1, 268,773 cells. The independent check the case is validated against.
+published_misfit.csv	UtahFORGE_1_Original_Top_Granite_Density_Model_MISFIT.csv	His misfit at the 323 stations he used. Says which 323, and that his RMS was 0.0301 mGal.
+granite_surface_TEST.csv	UtahFORGE_2_Modified_Top_Granite_Surface_Pts.csv	Top-of-granite points. From model 2, which the delivery's README calls a TEST case that should not be taken as final -- and it is the only surface shipped, so the reference model is built from it anyway. See P42. The suffix is the warning the old name lacked.
+report.pdf	UtahFORGE_3D_Gravity_Modelling_Report_May2019.pdf	Witter's modelling report. Source of the 2.55 modelling density and the rock densities.
+metadata.txt	Utah_FORGE_gravity_metadata.txt	States the 2.67 reduction density the delivered anomaly uses. The evidence for P20.
+README.txt	README.txt	The delivery's own README. Where the TEST-case warning in P42 is written down.
+workspace.geoh5	UtahFORGE_3D_Gravity_Models_May2019.geoh5	The delivery's Geoscience Analyst workspace. The only place the original top-of-granite surface is shipped. See F099.
+granite_surface_original.csv	(extracted)	Vertices of the workspace object "Original Top of Granite Surface", written by `_original_surface` in scripts/case1_forge.py. The seismic surface the reference model and the basement are built from.

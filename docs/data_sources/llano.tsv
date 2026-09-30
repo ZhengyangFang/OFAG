@@ -1,0 +1,41 @@
+# Llano Uplift case data, and where every byte came from.
+#
+# One USGS data release, doi:10.5066/F72Z14G6, Ikard and others (2019):
+# "Geoelectric and Seismic Data acquired in the Precambrian Granite Gravel
+# Aquifer, Llano Uplift, Central Texas, May 2017 - August 2018".
+#
+# Files are renamed for legibility and the release's own name is recorded, so a
+# renamed file can still be matched back to its delivery.
+#
+# One file is not from that release and is not delivered as it stands: the 3DEP
+# lidar under dem/, which is a window cut out of a 353 MB national tile. It is
+# here because the release's own elevations are a whole number of feet, sit
+# 2.4 m low and on ERT1 correlate -0.495 with the ground (L1, L12, L13, L15).
+# Everything else is delivered untouched; a stage that crops or converts one of
+# these says so in what it writes, and so does that file's own GeoTIFF tags.
+
+path	original_name	what_it_is
+srt/raw_records.txt	GGA_SRT_Raw_Data.txt	The seismograph records. 9.2 MB, and not what this case inverts: the picks below are the release's own and re-picking them would make the case an argument about picking.
+srt/geometry.txt	GGA_SRT_Survey_Geometry.txt	Per channel: profile, channel, source location, x along the line, latitude, longitude, NAVD88 elevation. 4 m spacing.
+srt/srt1_first_arrivals.txt	GGA_SRT1_First_Arrivals.txt	SeisImager/2D picks for profile 1: five shots at x = 0, 20, 44, 68 and 88 m, 24 channels each.
+srt/srt2_first_arrivals.txt	GGA_SRT2_First_Arrivals.txt	The same for profile 2.
+srt/srt1_velocity.txt	GGA_SRT1_Velocity_Model_Output.txt	The authors' own tomogram for profile 1. The independent check.
+srt/srt2_velocity.txt	GGA_SRT2_Velocity_Model_Output.txt	The authors' own tomogram for profile 2.
+ert/electrodes_xyz.txt	GGA_ERT_XYZ.txt	Electrode coordinates for both resistivity profiles.
+ert/ert1_input.dat	GGA_Profile_ERT1_RES2D_Input_20190619.Dat	RES2DINV input, profile 1: 4 m electrodes, array type 11 (Wenner-Schlumberger), 243 measurements. What this case inverts.
+ert/ert2_input.dat	GGA_Profile_ERT2_RES2D_Input_20190619.Dat	The same for profile 2.
+ert/ert1_published.dat	GGA_Profile_ERT1_RES2D_Output_20190619.dat	The authors' RES2DINV result for profile 1. The independent check.
+ert/ert2_published.dat	GGA_Profile_ERT2_RES2D_Output_20190619.dat	The authors' RES2DINV result for profile 2.
+ert/inversion_parameters.ivp	GGA_RES2D_Inversion_Parameters_20190619.ivp	The RES2DINV settings they used, so our own choices can be compared against theirs rather than invented.
+tdem/sounding.usf	GGA_TDEM_100m_Input_20190619.usf	One transient sounding, 100 m loop. USF is the format case 1's reader already parses.
+tdem/published_model.ixp	GGA_TDEM_100m_Model_20190619.IXP	Their IX1D model for it.
+tdem/published_output.txt	GGA_TDEM_100m_Output_20190619.TXT	Their inversion output in text.
+wells/borehole_D_log.txt	GGA_Borehole_D_Drillers_Log.txt	The one driller's log that is already a table: top and bottom depth in FEET, horizon, Munsell colour, auger diameter, notes. Records auger refusal at 7.5-8.0 ft. Uses -99999 as its null, the same sentinel as case 2's AEM (C1).
+wells/well_A_log.pdf	GGA_Well_A_Drillers_Log.pdf	Driller's log, PDF.
+wells/well_B_log.pdf	GGA_Well_B_Drillers_Log.pdf	Driller's log, PDF.
+wells/borehole_C_log.pdf	GGA_Borehole_C_Drillers_Log.pdf	Driller's log, PDF.
+wells/well_A_hydrograph.txt	Well_A_Hydrograph_May_2017.txt	Water level in well A, May 2017. The water table is a resistivity boundary and a velocity one, so this is the control on both.
+sp/survey.txt	GGA_SP_CR_Survey_Data.txt	441 self-potential measurements. No OFAG plugin; fetched so the case can say what it is not using.
+sp/drift.txt	GGA_SP_Drift_Data.txt	The self-potential base-station drift.
+metadata.xml	Granite_Gravel_Aquifer_Metadata.xml	FGDC metadata for the whole release.
+dem/llano_3dep_1m.tif	USGS_1M_14_x55y340_TX_Hurricane_2018_D18_SUPPLEMENTAL_DRRA.tif	3DEP 1 m bare-earth lidar, EPSG:26914, NAVD88, cropped to 1076 x 984 px around the survey by scripts/fetch_llano_dem.py (353 MB -> 3.0 MB). Not from doi:10.5066/F72Z14G6: sciencebase.gov/catalog/item/619c3717d34eb622f6931b2b, collected Jan-Feb 2019, five months after the survey, leaf-off. The vertical datum is the product record's, not the GeoTIFF's, which declares a horizontal CRS only. This is what the case's terrain now comes from.

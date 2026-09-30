@@ -1,0 +1,35 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+# Ignore pyGIMLi cache.
+.cache/
+coverage.xml
+htmlcov/
+
+# Keep generated project records local.
+Result/
+# Keep standalone run outputs local.
+artifacts/
+examples/Figure/
+dist/
+# Ignore Office lock files.
+~$*
+.release-smoke/
+
+# Keep fetched test fixtures local.
+.ofag-test-reference/
+
+# Ignore pyGIMLi failure dumps.
+modelFail.vector
+
+# Keep author files and local tools private.
+*.pptx
+paper/
+.claude/
+local_private/
+
+# Keep field data local.
+data/
