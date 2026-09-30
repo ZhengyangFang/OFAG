@@ -111,7 +111,7 @@ by hand.
 
 See [architecture](docs/architecture.md), [unit policy](docs/unit_policy.md),
 [validation and audit](docs/validation.md), and the
-[run-specific case audit register](docs/case_audit.md) for the current mechanism.
+[retrospective case review](docs/case_audit.md) for the current mechanism.
 A plugin's configuration is its own
 `physics_model` schema, which `ofag.describe_plugin` returns to an agent, so it
 is not restated in prose.
@@ -232,8 +232,9 @@ An external agent reaches OFAG over MCP (needs the `mcp` extra).
 serves one role's tools only (`lead`, `data`, `inversion`, `modelling`,
 `audit`, `literature`, `developer`), acting under that role's name in the
 ledger, and offers the role's brief as an MCP prompt. `ofag agent-brief audit
---task "..."` prints that brief, retrieved passages included. A run is read
-into a model only after a role other than the one that ran it has audited it.
+--task "..."` prints that brief, retrieved passages included. In the
+agent-mediated workflow, the modelling role reads a run only after a separate
+audit role has approved it.
 
 ## Current limits when sharing this software
 

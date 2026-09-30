@@ -86,12 +86,11 @@ The existing panel filenames help locate the source calculations:
 These are stems of PNGs exported by the notebooks, not final manuscript panel
 letters. Verify the final assembly against each caption before release.
 
-The [run-specific audit register](case_audit.md) records the later Audit Agent
-review of the saved inversions. The gravity assessment and 27-setting
-sensitivity panels above were computed by the case scripts and notebooks, not
-by the `ofag.audit` tool. Figure 8 uses the saved Llano model built before the
-retrospective audit; ERT1 and TEM were later vetoed, so Figure 8 must not be
-described as an Audit Agent-approved model.
+The [run-specific audit register](case_audit.md) records the later review of
+saved inversions. The case scripts and notebooks computed the gravity
+assessment and 27-setting sensitivity panels. Figure 8 uses the saved Llano
+model built before the retrospective review of ERT1 and TEM, both of which
+received vetoes for quantitative geological use. It is a conditional model.
 
 ## Reported limits to retain
 

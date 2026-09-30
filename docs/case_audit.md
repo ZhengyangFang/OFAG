@@ -1,4 +1,4 @@
-# Retrospective Audit Agent review of the saved field-case runs
+# Retrospective review of saved field-case runs
 
 On 2026-09-29 (local time), three project-scoped Codex review contexts examined
 the saved case evidence. The OFAG inversion role then called `ofag.adopt_run`
@@ -11,7 +11,7 @@ responses are retained locally in
 `Result/audit_reviews/2026-09-29_ofag_audit_calls.jsonl`; the project ledgers
 are under the ignored `Result/` tree.
 
-**Provenance boundary.** These are new, retrospective verdicts on previously completed runs. The case scripts originally used services directly, and this register does not claim that the original execution passed an agent audit gate. A pass authorizes only the bounded use in the evidence column; it does not prove a geological unit or a unique boundary. A veto bars that run from the agent-mediated model gate. Earlier scripted models were not rebuilt by this review.
+**Review scope.** These verdicts were recorded after the case scripts completed their runs through application services. They do not certify that the original execution used the agent audit gate. A pass supports only the bounded use in the evidence column; it does not establish a unique geological unit or boundary. A veto excludes the run from the agent-mediated model gate. This review did not rebuild earlier scripted models.
 
 The source datasets, full run artifacts and append-only ledgers are not distributed with the code repository. The run IDs and measured summaries below permit comparison with an exported project, but a fresh clone cannot independently verify these verdicts without those artifacts and external data.
 
@@ -44,4 +44,4 @@ Its `at` timestamps are UTC, which falls on 2026-09-30 for this local review.
 
 The median χ² shown for a batch is not the fit of every sounding. The FORGE TEM batch fits 53/66 soundings to target; FORGE MT 1D fits 76/82; Cedar AEM fits 1,234/1,374. Failed individual soundings or sites are not approved by a passing batch verdict.
 
-The FORGE gravity-based assessment, Cedar 27-setting sensitivity calculation, and Llano 27-setting sensitivity calculation were computed by case scripts and notebooks. They are not output from `ofag.audit`. Llano ERT1 and TEM are vetoed as quantitative model inputs, so the existing scripted geological model must be presented as a conditional interpretation, not as an Audit Agent-approved model.
+The case scripts and notebooks computed the FORGE gravity assessment and the Cedar and Llano 27-setting sensitivity analyses. The retrospective audit evaluated saved inversion runs; it did not generate those calculations. Llano ERT1 and TEM were vetoed as quantitative model inputs. The existing scripted geological model is therefore a conditional interpretation rather than an Audit Agent-approved model.
