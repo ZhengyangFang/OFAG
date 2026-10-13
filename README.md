@@ -30,6 +30,8 @@ The included knowledge corpus is a small synthetic demonstration. It is labelled
 
 The Lead Agent can delegate missing Python capabilities to the Developer Agent. Set `OFAG_DEVELOPER_WRITE_ENABLED=1` before starting OFAG to allow it to create a private Git worktree, edit source and tests, and return a local branch after Ruff, mypy and pytest pass. It never merges or pushes. The Audit Agent can call `ofag.model_stability` on a saved model recipe to recompute labels across stated threshold, reach and depth-limit choices; this does not approve a run audit.
 
+The Data Agent can call `ofag.ert_reciprocal_qc` on an imported ERT dataset. It pairs normal and reciprocal readings, applies the specified disagreement limit, optionally checks an aligned contact-resistance CSV, and saves retained observations with a fitted error model and rejection counts.
+
 ## Scope
 
 The source code is [MIT licensed](LICENSE). [Architecture](docs/architecture.md), [unit policy](docs/unit_policy.md), [workbench guidance](docs/workbench.md), and [public release scope](docs/release_scope.md) describe the distributed software. Field datasets and unpublished case materials are separate from this license.

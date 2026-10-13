@@ -118,6 +118,7 @@ ROLES: dict[Role, RoleSpec] = {
                 "ofag.list_importers",
                 "ofag.describe_importer",
                 "ofag.import_data",
+                "ofag.ert_reciprocal_qc",
                 "ofag.list_plugins",
                 "ofag.describe_plugin",
                 "ofag.conventions",
@@ -276,7 +277,13 @@ def check_the_split(registry: Any = None) -> list[str]:
             problems.append(f"{name} reaches off the machine and only literature may hold it")
         if tool.tier is Tier.DESTRUCTIVE and holders(name) - {Role.LEAD}:
             problems.append(f"{name} removes things and only the lead may hold it")
-    producing = {"ofag.import_data", "ofag.execute", "ofag.diagnose", "ofag.build_model"}
+    producing = {
+        "ofag.import_data",
+        "ofag.ert_reciprocal_qc",
+        "ofag.execute",
+        "ofag.diagnose",
+        "ofag.build_model",
+    }
     if producing & set(ROLES[Role.AUDIT].holds):
         problems.append("the auditor holds a tool that produces what it audits")
     if holders("ofag.audit") != {Role.AUDIT}:

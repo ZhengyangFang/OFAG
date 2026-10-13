@@ -161,6 +161,7 @@ class Dispatcher:
             "ofag.list_importers": self._list_importers,
             "ofag.describe_importer": self._describe_importer,
             "ofag.import_data": self._import_data,
+            "ofag.ert_reciprocal_qc": self._ert_reciprocal_qc,
             "ofag.delete_run": self._delete_run,
             "ofag.cell_grid": self._cell_grid,
             "ofag.build_model": self._build_model,
@@ -906,6 +907,41 @@ class Dispatcher:
         if registered is not None and isinstance(answer, dict):
             answer = {**answer, "registered_in_project": registered}
         return answer
+
+    def _ert_reciprocal_qc(self, arguments: dict[str, Any]) -> dict[str, object]:
+        """Process an imported ERT dataset with reciprocal and contact checks."""
+        from uuid import UUID
+
+        from ofag.agent.project_context import ProjectContext
+        from ofag.core.schemas import DatasetKind
+        from ofag.services.ert_qc import process_reciprocals
+        from ofag.services.project_service import ProjectService
+
+        try:
+            report = process_reciprocals(
+                self.artifact_root,
+                UUID(arguments["dataset_id"]),
+                max_reciprocal_error_percent=float(
+                    arguments.get("max_reciprocal_error_percent", 5.0)
+                ),
+                max_contact_resistance_ohm=float(
+                    arguments.get("max_contact_resistance_ohm", 2000.0)
+                ),
+                contact_resistance_csv=arguments.get("contact_resistance_csv"),
+            )
+            context = ProjectContext.find(self.artifact_root)
+            if context is not None:
+                registered = ProjectService(root=context.folder.parent).register_dataset(
+                    context.project_id,
+                    kind=DatasetKind.ERT,
+                    name=f"ERT QC {str(report['dataset_id'])[:8]}",
+                    source_filename=str(report["source_dataset_id"]),
+                    imported=report,
+                )
+                report["registered_in_project"] = registered.name
+            return report
+        except (OSError, ValueError, KeyError) as error:
+            raise ToolError(f"ofag.ert_reciprocal_qc refused: {error}") from error
 
     def _register_in_project(self, item: Any, request: Any, answer: Any) -> str | None:
         """Put what was imported on the open project's register, as the Data stage does."""

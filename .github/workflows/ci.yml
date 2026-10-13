@@ -29,7 +29,7 @@ jobs:
         run: uv run --no-sync python scripts/check_release_contract.py
       - name: Exercise the user workflows
         run: |
-          uv run --no-sync pytest -q tests/test_api.py tests/test_browser_auth.py tests/test_cli_run_roots.py tests/test_desktop.py tests/test_developer_agent.py tests/test_model_stability.py tests/test_mt_import.py tests/test_project_service.py tests/test_restart.py tests/test_run_start_policy.py
+          uv run --no-sync pytest -q tests/test_api.py tests/test_browser_auth.py tests/test_cli_run_roots.py tests/test_desktop.py tests/test_developer_agent.py tests/test_ert_qc.py tests/test_model_stability.py tests/test_mt_import.py tests/test_project_service.py tests/test_restart.py tests/test_run_start_policy.py
       - name: Exercise small synthetic method examples
         run: |
           uv run --no-sync pytest -q tests/test_simpeg_gravity.py tests/test_simpeg_tdem_batch.py tests/test_simpeg_mt1d.py tests/test_simpeg_tdem1d.py

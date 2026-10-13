@@ -72,6 +72,11 @@ REFUSALS: dict[str, str] = {
         "`describe_importer` names them per reader, because the point of a refusal written "
         "down is that it can be planned around rather than discovered."
     ),
+    "ofag.ert_reciprocal_qc": (
+        "Requires reciprocal pairs in an imported ERT dataset. Contact resistance is "
+        "checked only when an aligned CSV is supplied; insufficient retained pairs "
+        "cannot produce an error model."
+    ),
     "ofag.resolve_identifier": (
         "Reaches only the named registries, over https, with a GET that carries no body: the "
         "scope is published work and it is enforced as a host list rather than as a judgement "
@@ -334,6 +339,26 @@ def tool_manifest(registry: Any = None) -> tuple[Tool, ...]:
                 request={"type": "object"},
             ),
             refuses=REFUSALS["ofag.import_data"],
+        ),
+        Tool(
+            name="ofag.ert_reciprocal_qc",
+            tier=Tier.WRITE,
+            summary=(
+                "Filter reciprocal ERT measurements by disagreement and optional contact "
+                "resistance, then save the retained observations and fitted error model."
+            ),
+            input_schema={
+                "type": "object",
+                "properties": {
+                    "dataset_id": _STRING,
+                    "max_reciprocal_error_percent": {"type": "number", "minimum": 0},
+                    "max_contact_resistance_ohm": {"type": "number", "minimum": 0},
+                    "contact_resistance_csv": _STRING,
+                },
+                "required": ["dataset_id"],
+                "additionalProperties": False,
+            },
+            refuses=REFUSALS["ofag.ert_reciprocal_qc"],
         ),
         Tool(
             name="ofag.registries",
