@@ -339,6 +339,8 @@ class InterpretationService:
                     sampled < rule.threshold if rule.below_threshold else sampled > rule.threshold
                 )
                 matches = unclaimed & crossed & (depth_below_ground_m >= rule.resolved_from_depth_m)
+                if rule.resolved_to_depth_m is not None:
+                    matches &= depth_below_ground_m <= rule.resolved_to_depth_m
             if rule.reach_m is not None and rule.kind is UnitRuleKind.PROPERTY_THRESHOLD:
                 out_of_reach = distance > rule.reach_m
                 beyond_reach[index] = (

@@ -28,6 +28,8 @@ The Agent tools use a provider selected by the user. An API key can be supplied 
 
 The included knowledge corpus is a small synthetic demonstration. It is labelled as such and does not represent the manuscript's full research corpus. Audit decisions for a user's project are recorded by the runtime in that user's project directory.
 
+The Lead Agent can delegate missing Python capabilities to the Developer Agent. Set `OFAG_DEVELOPER_WRITE_ENABLED=1` before starting OFAG to allow it to create a private Git worktree, edit source and tests, and return a local branch after Ruff, mypy and pytest pass. It never merges or pushes. The Audit Agent can call `ofag.model_stability` on a saved model recipe to recompute labels across stated threshold, reach and depth-limit choices; this does not approve a run audit.
+
 ## Scope
 
 The source code is [MIT licensed](LICENSE). [Architecture](docs/architecture.md), [unit policy](docs/unit_policy.md), [workbench guidance](docs/workbench.md), and [public release scope](docs/release_scope.md) describe the distributed software. Field datasets and unpublished case materials are separate from this license.

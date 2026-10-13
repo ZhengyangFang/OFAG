@@ -133,6 +133,12 @@ class Dispatcher:
     # -- the handlers -------------------------------------------------------
 
     def _handler(self, name: str) -> Callable[[dict[str, Any]], Any]:
+        if name.startswith("ofag.developer_"):
+            from ofag.agent.developer import handle as developer_handle
+
+            return lambda arguments: developer_handle(
+                self.artifact_root, name.removeprefix("ofag.developer_"), arguments
+            )
         from ofag.agent.workbench_tools import handle, manifest
 
         if name == "ofag.saved_run":
@@ -166,6 +172,7 @@ class Dispatcher:
             "ofag.retrieve": self._retrieve,
             "ofag.diagnose": self._diagnose,
             "ofag.audit": self._audit,
+            "ofag.model_stability": self._model_stability,
             "ofag.propose_lesson": self._propose_lesson,
         }
         if name not in handlers:
@@ -572,6 +579,79 @@ class Dispatcher:
                 for unit in report.units
             ],
             "furthest_column_from_a_ground_point_m": float(np.max(grid.ground_distance_m)),
+        }
+
+    def _model_stability(self, arguments: dict[str, Any]) -> dict[str, Any]:
+        """Compare saved labels with stated changes to one model rule."""
+        import json
+        from uuid import UUID, uuid4
+
+        import numpy as np
+
+        from ofag.agent.model_stability import evaluate
+        from ofag.agent.volumes import load_grid
+        from ofag.core.schemas import UnitRule
+        from ofag.services.unit_models import MODELS_DIR, load_unit_model
+
+        try:
+            model_id = UUID(arguments["model_id"])
+        except ValueError as invalid:
+            raise ToolError("model_id must be a saved model UUID") from invalid
+        model_path = self.artifact_root / MODELS_DIR / f"{model_id}.npz"
+        recipe_path = model_path.with_suffix(".recipe.json")
+        if not model_path.is_file() or not recipe_path.is_file():
+            raise ToolError("Model stability needs a saved model and its build recipe.")
+        recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+        try:
+            grid = load_grid(UUID(str(recipe["grid_id"])), self.artifact_root)
+            rules = tuple(UnitRule.model_validate(rule) for rule in recipe["rules"])
+            surfaces = self._surfaces_for(grid, recipe.get("surfaces") or {})
+            given_sections = recipe.get("sections") or {}
+            sections = self._sections_for(given_sections)
+        except (KeyError, ValueError, FileNotFoundError) as invalid:
+            raise ToolError(f"Saved model recipe cannot be read: {invalid}") from invalid
+        owed = self._owed_before_reading(given_sections)
+        if owed:
+            raise ToolError(f"Source runs need a current independent audit: {owed}")
+        if grid.cells > 1_000_000:
+            raise ToolError("Model stability is limited to one million cells per call.")
+        try:
+            stability = evaluate(
+                grid,
+                rules,
+                surfaces,
+                sections,
+                rule_name=arguments["rule_name"],
+                thresholds=arguments["thresholds"],
+                reaches_m=arguments["reaches_m"],
+                depth_limits_m=arguments["depth_limits_m"],
+            )
+        except ValueError as invalid:
+            raise ToolError(f"Model stability refused: {invalid}") from invalid
+        saved = load_unit_model(model_path)
+        baseline = np.where(stability.baseline < 0, len(rules), stability.baseline)
+        if saved.unit.shape != baseline.shape or not np.array_equal(saved.unit, baseline):
+            raise ToolError("The saved model no longer matches its recipe and source sections.")
+        audit_dir = self.artifact_root / "model_audits"
+        audit_dir.mkdir(parents=True, exist_ok=True)
+        artifact = audit_dir / f"{model_id}-{uuid4().hex[:12]}.npz"
+        np.savez_compressed(
+            artifact,
+            agreement_with_baseline_fraction=stability.agreement,
+            invariant=stability.invariant,
+            depth_below_ground_m=grid.depth_below_ground_m,
+            baseline_labels=baseline,
+        )
+        return {
+            "model_id": str(model_id),
+            "rule_name": arguments["rule_name"],
+            "variant_count": stability.variant_count,
+            "invariant_share": stability.invariant_share,
+            "mean_agreement": stability.mean_agreement,
+            "depth_profile": stability.depth_profile,
+            "artifact": artifact.as_posix(),
+            "meaning": "Agreement with the baseline under the stated choices, not a probability.",
+            "run_audit_unchanged": True,
         }
 
     def _save_labelled_model(self, grid: Any, rules: Any, model: Any) -> Any:

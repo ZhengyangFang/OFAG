@@ -25,7 +25,14 @@ __all__ = ["Event", "Orchestrator", "DELEGATE", "Cancelled"]
 DELEGATE = "ofag.delegate"
 
 #: The roles the lead may start from here.
-DELEGABLE = (Role.DATA, Role.INVERSION, Role.MODELLING, Role.AUDIT, Role.LITERATURE)
+DELEGABLE = (
+    Role.DATA,
+    Role.INVERSION,
+    Role.MODELLING,
+    Role.AUDIT,
+    Role.LITERATURE,
+    Role.DEVELOPER,
+)
 
 #: A tool result longer than this is cut, with a note saying so.
 LONGEST_RESULT = 12_000
@@ -37,7 +44,7 @@ You are talking with a person who is working on a geophysics project in
 OFAG. Answer what they ask; do the work by delegating it.
 
 - `ofag.delegate` starts one of the other roles on a task: data, inversion,
-  modelling, audit or literature. Give it a task that stands alone -- the
+  modelling, audit, literature or developer. Give it a task that stands alone -- the
   role sees nothing of this conversation -- naming the files, runs or
   identifiers it needs. It returns the role's report.
 - A run is read into a model only after the audit role has passed it, and
@@ -64,6 +71,8 @@ OFAG. Answer what they ask; do the work by delegating it.
   and never substitutes for validate. Confirm saved outputs from tool results.
 - Historical results need adopt_run, diagnosis and an independent audit before modelling.
   A selected result is not automatically audited. Never claim a refused build succeeded.
+- Delegate missing software capabilities to the developer role. Its branch needs human
+  review before merging; a passed test does not establish a scientific case result.
 - Model builds return model_id. Use list_models and model_recipe to inspect the saved output,
   and export_report for a local deliverable. State missing capabilities explicitly.
 """

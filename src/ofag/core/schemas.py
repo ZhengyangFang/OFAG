@@ -2770,6 +2770,8 @@ class UnitRule(StrictModel):
     #: For PROPERTY_THRESHOLD: the depth above which the method resolves nothing, so
     #: nothing above it is claimed either way.
     resolved_from_depth_m: float = Field(default=0.0, ge=0.0)
+    #: For PROPERTY_THRESHOLD: the deepest depth supported by this method.
+    resolved_to_depth_m: float | None = Field(default=None, gt=0.0)
     #: How far a cell may be from the nearest measurement and still be assigned by this
     #: rule.
     reach_m: float | None = Field(default=None, gt=0.0)
@@ -2782,6 +2784,11 @@ class UnitRule(StrictModel):
         elif self.kind is UnitRuleKind.PROPERTY_THRESHOLD:
             if not self.section or self.threshold is None:
                 raise ValueError("a property_threshold rule needs a section and a threshold")
+            if (
+                self.resolved_to_depth_m is not None
+                and self.resolved_to_depth_m < self.resolved_from_depth_m
+            ):
+                raise ValueError("resolved_to_depth_m must be at least resolved_from_depth_m")
         return self
 
 

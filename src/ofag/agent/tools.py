@@ -30,6 +30,26 @@ class Tier(StrEnum):
 
 #: What each tool refuses, in the words its description carries.
 REFUSALS: dict[str, str] = {
+    "ofag.developer_prepare": (
+        "Requires OFAG_DEVELOPER_WRITE_ENABLED=1 and a source checkout. Creates a local "
+        "Git worktree from HEAD; uncommitted checkout changes are not copied."
+    ),
+    "ofag.developer_patch": (
+        "Changes Python files only under src/ofag or tests in the isolated worktree. "
+        "Existing text must match exactly once."
+    ),
+    "ofag.developer_check": (
+        "Runs fixed ruff, mypy and pytest commands in the worktree. A failed check "
+        "prevents the branch from being finished."
+    ),
+    "ofag.developer_finish": (
+        "Commits only checked source and tests to the isolated branch. It never merges "
+        "or pushes the branch."
+    ),
+    "ofag.model_stability": (
+        "Requires a saved model recipe and currently audited source runs. Reports label "
+        "agreement over the supplied parameter grid; it does not pass a run audit."
+    ),
     "ofag.validate": (
         "Refuses nothing. Returns a report; an invalid specification is an answer, not an error."
     ),
@@ -519,6 +539,56 @@ def tool_manifest(registry: Any = None) -> tuple[Tool, ...]:
                 "additionalProperties": False,
             },
             refuses=REFUSALS["ofag.audit"],
+        ),
+        Tool(
+            name="ofag.model_stability",
+            tier=Tier.COMPUTE,
+            summary=(
+                "Recompute a saved model across thresholds, measurement reaches and depth "
+                "limits, then save per-cell and depth-wise label stability."
+            ),
+            input_schema=_object(
+                model_id=_STRING,
+                rule_name=_STRING,
+                thresholds={"type": "array", "items": {"type": "number"}},
+                reaches_m={"type": "array", "items": {"type": "number"}},
+                depth_limits_m={"type": "array", "items": {"type": "number"}},
+            ),
+            refuses=REFUSALS["ofag.model_stability"],
+        ),
+        Tool(
+            name="ofag.developer_prepare",
+            tier=Tier.WRITE,
+            summary="Create an isolated Git worktree for one missing capability.",
+            input_schema=_object(),
+            refuses=REFUSALS["ofag.developer_prepare"],
+        ),
+        Tool(
+            name="ofag.developer_read",
+            tier=Tier.READ,
+            summary="Read a Python source or test file in a developer worktree.",
+            input_schema=_object(workspace_id=_STRING, path=_STRING),
+        ),
+        Tool(
+            name="ofag.developer_patch",
+            tier=Tier.WRITE,
+            summary="Replace one exact passage or create one Python file in a developer worktree.",
+            input_schema=_object(workspace_id=_STRING, path=_STRING, old=_STRING, new=_STRING),
+            refuses=REFUSALS["ofag.developer_patch"],
+        ),
+        Tool(
+            name="ofag.developer_check",
+            tier=Tier.COMPUTE,
+            summary="Run ruff, mypy and pytest against the isolated source changes.",
+            input_schema=_object(workspace_id=_STRING),
+            refuses=REFUSALS["ofag.developer_check"],
+        ),
+        Tool(
+            name="ofag.developer_finish",
+            tier=Tier.WRITE,
+            summary="Commit verified changes to the developer branch for human review.",
+            input_schema=_object(workspace_id=_STRING, summary=_STRING),
+            refuses=REFUSALS["ofag.developer_finish"],
         ),
         Tool(
             name="ofag.delete_run",

@@ -174,6 +174,7 @@ ROLES: dict[Role, RoleSpec] = {
                 "ofag.describe_importer",
                 "ofag.owed",
                 "ofag.result",
+                "ofag.model_stability",
                 "ofag.audit",
             ),
             stages=(),
@@ -193,18 +194,22 @@ ROLES: dict[Role, RoleSpec] = {
         RoleSpec(
             role=Role.DEVELOPER,
             purpose=(
-                "Add a capability the surface lacks, in its own git worktree, and hand back a "
-                "branch that passed ruff, mypy and pytest -- never an edit to the shared tree."
+                "Add a missing capability in an isolated Git worktree, check it with ruff, "
+                "mypy and pytest, and hand back a local branch for human review."
             ),
             tools=(
                 "ofag.list_plugins",
                 "ofag.describe_plugin",
                 "ofag.list_importers",
                 "ofag.describe_importer",
+                "ofag.developer_prepare",
+                "ofag.developer_read",
+                "ofag.developer_patch",
+                "ofag.developer_check",
+                "ofag.developer_finish",
             ),
             stages=(),
             delivers="a branch per capability, with its gates' output and the test that pins it",
-            subagents="one per missing capability, each in its own worktree",
         ),
     )
 }
