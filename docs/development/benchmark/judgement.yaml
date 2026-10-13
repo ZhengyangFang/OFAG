@@ -1,0 +1,9 @@
+replays:
+  - lesson: SYN001
+    question: Which unit should a newly imported survey use when its header is incomplete?
+    probe: null
+    expect: judged
+    must_name:
+      - ["source metadata", "instrument record"]
+    historical: null
+    blocked_by: No source survey is included in this public example.

@@ -1,0 +1,12 @@
+lessons:
+  - id: SYN001
+    title: A negative resistivity value must be refused
+    source: public_example
+    tier: synthetic
+    silent: false
+    decision: none
+    procedure: A1
+    covered_by: null
+    evidence: "Synthetic example: an input resistivity of -1 ohm metre is outside the physical domain."
+    methods: [ert]
+    found_by: building
