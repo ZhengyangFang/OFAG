@@ -30,6 +30,33 @@ def test_existing_ledger_observes_another_readers_veto(tmp_path):
     assert first.entries() == other.entries()
 
 
+def test_later_veto_removes_an_existing_preference(tmp_path):
+    from types import SimpleNamespace
+
+    from ofag.core.schemas import RunRecord, RunResult, RunState, spec_fingerprint
+    from ofag.services.result_review import ResultReview
+    from tests.conftest import gravity_run_spec
+
+    spec = gravity_run_spec()
+    runs = SimpleNamespace(
+        artifact_root=tmp_path,
+        get=lambda _: RunRecord(spec=spec, state=RunState.SUCCEEDED),
+        result=lambda _: RunResult(run_id=spec.run_id, summary={}, artifacts=()),
+    )
+    review = ResultReview(runs)
+    review.choose(spec.run_id)
+    assert review.preferred(spec.run_id)
+
+    ledger = Ledger(tmp_path / LEDGER_FILENAME)
+    fingerprint = spec_fingerprint(spec)
+    ledger.discharge(Stage.ADOPTED, fingerprint, "saved result adopted", by="producer")
+    ledger.discharge(Stage.DIAGNOSED, fingerprint, "saved residuals diagnosed", by="producer")
+    ledger.discharge(Stage.VETOED, fingerprint, "saved result fails the audit", by="auditor")
+
+    assert not review.preferred(spec.run_id)
+    assert review.selections() == []
+
+
 def test_failed_write_does_not_discharge_in_memory(tmp_path, monkeypatch):
     ledger = Ledger(tmp_path / LEDGER_FILENAME)
 

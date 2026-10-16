@@ -89,6 +89,8 @@ class ResultReview:
                 temporary.unlink(missing_ok=True)
 
     def preferred(self, run_id: UUID) -> bool:
+        if self.audit_status(run_id).startswith("Vetoed"):
+            return False
         record = self.runs.get(run_id)
         entry = self._read().get(self._scope(record.spec), {})
         return entry.get("run_id") == str(run_id) and entry.get(

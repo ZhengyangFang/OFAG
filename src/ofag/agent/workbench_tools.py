@@ -235,6 +235,10 @@ def handle(root: Path, name: str, args: dict[str, Any], actor: str) -> Any:
                 raise ValueError("A completed result and source evidence are required.")
             for artifact in result.artifacts:
                 artifact_path = (root / artifact.relative_path).resolve()
+                if not artifact_path.is_relative_to(root.resolve()):
+                    raise ValueError(f"Artifact is unavailable: {artifact.relative_path}")
+                if not artifact_path.is_file():
+                    artifact_path = (root / str(run_id) / artifact.relative_path).resolve()
                 if not artifact_path.is_relative_to(root.resolve()) or not artifact_path.is_file():
                     raise ValueError(f"Artifact is unavailable: {artifact.relative_path}")
             ledger = Ledger(root / "obligations.jsonl")
@@ -305,6 +309,10 @@ def handle(root: Path, name: str, args: dict[str, Any], actor: str) -> Any:
             )
         lines += [
             "## Models",
+            "",
+            "Run audits do not approve models built earlier by case scripts. "
+            "This report cannot establish that a model without a saved recipe "
+            "passed the agent model gate.",
             "",
             "```json",
             json.dumps(handle(root, "ofag.list_models", {}, actor), ensure_ascii=False, indent=2),
