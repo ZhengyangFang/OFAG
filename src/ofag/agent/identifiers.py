@@ -65,8 +65,7 @@ class Source(StrictModel):
             if not self.resolved_to.strip():
                 raise ValueError(
                     f"{self.what!r} says {self.identifier} was confirmed and does not say what "
-                    "came back. Naming it is the whole check: three of case 1's DOIs were "
-                    "well-formed, resolvable, and pointed at the wrong submission."
+                    "came back. Record the resolved title or source before marking it confirmed."
                 )
             if self.checked_on is None:
                 raise ValueError(f"{self.what!r} was confirmed on no date; an identifier decays")

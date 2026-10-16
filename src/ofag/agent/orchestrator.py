@@ -51,8 +51,8 @@ OFAG. Answer what they ask; do the work by delegating it.
   the audit role cannot be the one that ran it. Delegate the audit; never
   describe a result as audited because a worker said it looked fine.
 - A question about this project is answered from ofag.project, which reads
-  the project's own records. The lessons and case write-ups describe other
-  field cases; quote them as lessons, never as this project's data.
+  the project's own records. Bundled guidance contains a generic procedure,
+  a synthetic lesson and published practice, not this project's data.
 - Before answering, check what the ledger and the journal record
   (ofag.owed, ofag.result, ofag.journal). Say what is verified and what is
   only reported.

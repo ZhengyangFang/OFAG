@@ -209,8 +209,8 @@ class _LabelledModelTab(QWidget):
         if self._models.count() == 0:
             self._model = None
             self._plot.clear(
-                "No labelled model in this project yet. One is written when a case script "
-                "builds its model, or when the modelling agent runs ofag.build_model."
+                "No labelled model in this project yet. Build one in the workbench or "
+                "with the Modelling Agent."
             )
             self._report.clear()
             return

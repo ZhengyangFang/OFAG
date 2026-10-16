@@ -26,7 +26,7 @@ Run `uv run ofag --help` for CLI commands. The HTTP server starts with `uv run o
 
 The Agent tools use a provider selected by the user. An API key can be supplied through an environment variable. `ofag auth login gpt` supports the available ChatGPT browser sign-in, and `ofag auth login claude` uses the Anthropic Console sign-in provided by its CLI. `ofag auth status` reports the selected provider without displaying credentials. Account access and provider availability depend on the provider.
 
-The included knowledge corpus is a small synthetic demonstration. It is labelled as such and does not represent the manuscript's full research corpus. Audit decisions for a user's project are recorded by the runtime in that user's project directory.
+The bundled lesson file contains one synthetic example. Separate method guides summarize published practice; neither is a record of the manuscript's field cases. Audit decisions for a user's project are recorded by the runtime in that user's project directory.
 
 The Lead Agent can delegate missing Python capabilities to the Developer Agent. Set `OFAG_DEVELOPER_WRITE_ENABLED=1` before starting OFAG to allow it to create a private Git worktree, edit source and tests, and return a local branch after Ruff, mypy and pytest pass. It never merges or pushes. The Audit Agent can call `ofag.model_stability` on a saved model recipe to recompute labels across stated threshold, reach and depth-limit choices; this does not approve a run audit.
 

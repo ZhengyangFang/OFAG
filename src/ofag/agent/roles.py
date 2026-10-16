@@ -331,9 +331,9 @@ def brief(
         lines += ["", "## Subagents", "", f"You may fan out: {spec.subagents}."]
     lines += [
         "",
-        "## What earlier field cases taught, that bears on this",
+        "## Guidance relevant to this task",
         "",
-        "Lessons from the cases OFAG was built on -- not data in the open project.",
+        "Bundled guidance includes a synthetic lesson and published practice, not project data.",
         f"A passage marked {RECEIVED_MARK} is published practice this project has not "
         "measured: it may suggest a check, and it is never a reason to pass or refuse a run.",
         "",

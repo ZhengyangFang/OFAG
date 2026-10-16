@@ -41,7 +41,7 @@ try {
             -not $report.runtime_self_test.passed) {
             throw "Installed-wheel worker self-test failed."
         }
-        & $python -I -c "from ofag.agent.lessons import load_lessons; from ofag.agent.retrieval import default_index; from ofag.agent.replay import load_replays; assert load_lessons(); assert load_replays(); assert default_index(); print('Installed Agent knowledge loaded successfully')"
+        & $python -I -c "from ofag.agent.lessons import load_lessons; from ofag.agent.retrieval import default_index; assert load_lessons(); assert default_index(); print('Installed Agent knowledge loaded successfully')"
         if ($LASTEXITCODE -ne 0) { throw "Installed-wheel Agent knowledge test failed." }
     } finally {
         Pop-Location

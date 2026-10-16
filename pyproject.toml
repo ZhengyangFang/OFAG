@@ -79,8 +79,6 @@ exclude = [
 "docs/unit_policy.md" = "ofag/_resources/docs/unit_policy.md"
 "docs/knowledge" = "ofag/_resources/docs/knowledge"
 "docs/lessons/lessons.yaml" = "ofag/_resources/docs/lessons/lessons.yaml"
-"docs/development/benchmark/judgement.yaml" = "ofag/_resources/docs/development/benchmark/judgement.yaml"
-"docs/development/benchmark/silent.yaml" = "ofag/_resources/docs/development/benchmark/silent.yaml"
 
 [tool.pytest.ini_options]
 addopts = "-ra"

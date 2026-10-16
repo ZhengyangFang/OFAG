@@ -762,9 +762,7 @@ class Dispatcher:
                 )
             request = dict(source)
             run_id = str(request["run_id"])
-            # Asked of RunService rather than built here: the layout is its own, and a
-            # copy of it written here as root/runs/<id> was wrong -- every run this
-            # dispatcher starts lives at root/<id>.
+            # RunService owns the run directory layout.
             try:
                 runs.get(UUID(run_id))
             except (KeyError, ValueError) as absent:

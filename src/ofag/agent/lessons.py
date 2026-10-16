@@ -40,15 +40,15 @@ DATA_FOR_SOURCE = {
 class Tier(StrEnum):
     """What stands behind a lesson, and therefore what it may be used for."""
 
-    #: We hit it, on data still in hand, so it can be replayed.
+    #: Supported by project measurements.
     MEASURED = "measured"
-    #: Someone else hit it and left a minimal reproduction.
+    #: Supported by an external reproduction.
     REPRODUCIBLE = "reproducible"
     #: The engine's own documentation says so.
     DECLARED = "declared"
     #: A textbook or a standard says so.
     RECEIVED = "received"
-    #: Injected on purpose to see whether a check fires.
+    #: Used to test a check.
     SYNTHETIC = "synthetic"
 
 
@@ -68,8 +68,7 @@ class FoundBy(StrEnum):
 
     #: While the agent system was being developed and tested.
     DEVELOPMENT = "development"
-    #: Reported by an agent working through OFAG's agent layer -- in a replay or a
-    #: silent task -- that nothing else had caught.
+    #: Reported by an agent.
     AGENT = "agent"
     #: While building or checking the agent layer itself.
     BUILDING = "building"
@@ -86,8 +85,7 @@ class Lesson:
     """One recorded failure."""
 
     id: str
-    #: Written as the rule rather than the incident, because that is the form it gets
-    #: used in: "A cell is not a unit of ground".
+    #: Reusable rule learned from the evidence.
     title: str
     source: str
     tier: Tier
@@ -99,8 +97,7 @@ class Lesson:
     procedure: str | None
     #: A test that demonstrably fires on it, or None.
     covered_by: str | None
-    #: One sentence, quoted from the write-up rather than summarised, so the record
-    #: cannot drift from the account it came from.
+    #: Evidence supporting the lesson.
     evidence: str
     #: The method whose data it happened on, or empty where no survey data was involved
     #: -- a scheduler, a harness, a constant in a script.

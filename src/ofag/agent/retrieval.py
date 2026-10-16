@@ -86,7 +86,7 @@ class Kind(StrEnum):
     PROCEDURE = "procedure"
     #: One recorded failure: what went wrong when it was not done.
     LESSON = "lesson"
-    #: A section of a write-up: how it went in a real case.
+    #: A section of a supporting document.
     WRITE_UP = "write_up"
     #: A practice the literature states and this project has not measured: it may
     #: propose a check, never gate a run.
@@ -229,8 +229,7 @@ def passages_from_lessons(path: Path | None = None) -> list[Passage]:
     passages = []
     for lesson in load_lessons(path):
         text = f"{lesson.title}\n\n{lesson.evidence}"
-        # The old identifier is in the text so a query that cites it -- from a paper or
-        # a note written before the renumbering -- still finds it.
+        # Keep former identifiers searchable in existing project notes.
         formerly = f" (formerly {lesson.former_id})" if lesson.former_id else ""
         passages.append(
             Passage(
@@ -448,8 +447,7 @@ def _structured_order(passage: Passage, procedure: str | None) -> tuple[int, int
 
 @lru_cache(maxsize=1)
 def default_index() -> Index:
-    """The project's own corpus -- the procedure, the lessons and the write-ups -- and the
-    received practice beside it."""
+    """Index the bundled procedure, example lesson, guides and published practice."""
     passages = passages_from_markdown(PROCEDURE, procedure_document=True)
     passages += passages_from_lessons()
     for path in WRITE_UPS:

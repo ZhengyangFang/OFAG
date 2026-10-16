@@ -1,9 +1,0 @@
-silent:
-  - lesson: SYN001
-    task: Review a synthetic resistivity table for import readiness.
-    gates: []
-    on_path: true
-    tells:
-      - what: a resistivity value is outside the physical domain
-        names: ["negative resistivity", "invalid resistivity", "outside the physical domain"]
-    cost: Synthetic example only; no field measurement is included.

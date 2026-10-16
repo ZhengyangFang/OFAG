@@ -273,9 +273,7 @@ def tool_manifest(registry: Any = None) -> tuple[Tool, ...]:
             summary=(
                 "Before asking anyone anything: say whether something runnable would separate "
                 "the options, and whether it is cheap enough to just run. Returns measure, "
-                "time it first, or ask, with the reason. Six of this project's sixty-eight "
-                "lessons are decisions the data would have settled for the price of one extra "
-                "inversion."
+                "time it first, or ask, with the reason."
             ),
             input_schema=_object(
                 probes={
@@ -299,8 +297,7 @@ def tool_manifest(registry: Any = None) -> tuple[Tool, ...]:
             summary=(
                 "Write down a choice the data could not settle: the options and what each "
                 "costs, what was chosen and on what criterion, and what would make it wrong "
-                "later. Ninety-nine documented constants in this project record fifty-four "
-                "choices and three say what would reverse them."
+                "later."
             ),
             input_schema=_object(decision={"type": "object"}),
         ),
@@ -468,7 +465,7 @@ def tool_manifest(registry: Any = None) -> tuple[Tool, ...]:
             summary=(
                 "The open project: its name, coordinate system, methods, the datasets imported "
                 "into it and the runs it holds. Start here for any question about this project; "
-                "the lesson corpus describes other field cases, not this one."
+                "bundled guidance is separate from project data."
             ),
             input_schema={
                 "type": "object",
@@ -482,9 +479,9 @@ def tool_manifest(registry: Any = None) -> tuple[Tool, ...]:
             tier=Tier.READ,
             summary=(
                 "Passages from the procedure (A before an inversion, B after a bad misfit, C "
-                "before reading into a model), the lesson corpus and the case write-ups of the "
-                "field cases OFAG was built on, quoted with where they came from. Lessons, not "
-                "the open project's data. Also published practice per method (kind "
+                "before reading into a model), a synthetic lesson and generic supporting "
+                "documents, quoted with their sources. This guidance is not the open "
+                "project's data. Also published practice per method (kind "
                 "'received', with its DOIs): it may suggest a check and never passes or "
                 "refuses a run. Filter by stage, procedure step or method; "
                 "rank by a query. Read what bears on the step before taking it."

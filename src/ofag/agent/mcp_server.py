@@ -90,7 +90,7 @@ def serve(  # pragma: no cover
                 name=BRIEF_PROMPT,
                 description=(
                     f"Start the {role or 'lead'} role: its job, its tools, and the passages "
-                    "from the procedure, lessons and case write-ups that bear on the task."
+                    "from the procedure and public guidance that bear on the task."
                 ),
                 arguments=[
                     types.PromptArgument(name=name, description=text, required=required)

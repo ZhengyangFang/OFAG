@@ -159,9 +159,7 @@ class SimPEGTDEM3DForwardPlugin:
         return ValidationReport(valid=not issues, issues=tuple(issues))
 
     def conventions(self) -> _Unverified:
-        """Unverified. A 3D transient forward model has an independent check available -- it
-        must agree with the layered simulation over ground that does not vary sideways --
-        and it has not been written."""
+        """Report that no independent convention check is implemented."""
         return UNVERIFIED
 
     def estimate_resources(self, context: PluginContext, spec: RunSpec) -> ResourceEstimate:

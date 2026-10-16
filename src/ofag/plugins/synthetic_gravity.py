@@ -62,9 +62,7 @@ class SyntheticGravityPlugin:
         return ValidationReport(valid=not issues, issues=tuple(issues))
 
     def conventions(self) -> _Unverified:
-        """Unverified, and least urgent: this plugin makes fixture data rather than reading a
-        survey, so a wrong convention here produces a wrong fixture rather than a wrong
-        model of real ground."""
+        """Report that the synthetic fixture has no independent convention check."""
         return UNVERIFIED
 
     def estimate_resources(self, context: PluginContext, spec: RunSpec) -> ResourceEstimate:

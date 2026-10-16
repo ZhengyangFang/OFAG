@@ -128,13 +128,12 @@ class GuardedRuns:
                 from ofag.core.conventions import _Unverified
 
                 checks = getattr(self._plugin(spec), "conventions", lambda: ())()
-                # UNVERIFIED is the plugin saying why it has none, which is what the
-                # stage asks of a plugin without checks.
+                # Record the plugin's convention-check status.
                 self._discharge(
                     Stage.CONVENTIONS_CHECKED,
                     fingerprint,
-                    "declared UNVERIFIED: no independent check exists, and validate reports "
-                    "that on every run"
+                    "declared UNVERIFIED: no independent check is configured; validate "
+                    "reports that on every run"
                     if isinstance(checks, _Unverified)
                     else f"{len(tuple(checks))} convention checks passed inside validate",
                 )

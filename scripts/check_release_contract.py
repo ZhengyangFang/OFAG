@@ -15,7 +15,14 @@ REQUIRED = {
 }
 PRIVATE_ROOTS = {"paper", "data", "Result", "artifacts", "examples", "local_private"}
 PRIVATE_FILES = {".env", "credentials.json", "agent_settings.json"}
-PRIVATE_PATHS = {"src/ofag/agent/retrospect.py", "tests/test_edi.py"}
+PRIVATE_PATHS = {
+    "src/ofag/agent/arms.py",
+    "src/ofag/agent/audit.py",
+    "src/ofag/agent/noticing.py",
+    "src/ofag/agent/replay.py",
+    "src/ofag/agent/retrospect.py",
+    "tests/test_edi.py",
+}
 PRIVATE_SUFFIXES = {".ipynb", ".pptx", ".docx", ".pdf", ".pem", ".key", ".p12", ".pfx"}
 PRIVATE_MARKER = re.compile(r"\bF\d{3}\b|\bFRG\d+\b")
 
@@ -44,8 +51,12 @@ def check() -> list[str]:
             problems.append(f"private path in source release: {relative.as_posix()}")
         if relative.suffix.lower() in PRIVATE_SUFFIXES:
             problems.append(f"private file type in source release: {relative.as_posix()}")
-        if parts[0] == "docs" and len(parts) > 1 and parts[1] in {"data_sources", "cases"}:
-            problems.append(f"case documentation in source release: {relative.as_posix()}")
+        if parts[0] == "docs" and len(parts) > 1 and parts[1] in {
+            "data_sources",
+            "cases",
+            "development",
+        }:
+            problems.append(f"private documentation in source release: {relative.as_posix()}")
         case_prefixes = ("case1_", "case2_", "case3_", "case_audit")
         if parts[0] == "docs" and relative.name.startswith(case_prefixes):
             problems.append(f"case record in source release: {relative.as_posix()}")

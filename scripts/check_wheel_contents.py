@@ -8,8 +8,6 @@ from pathlib import Path
 REQUIRED = {
     "ofag/_resources/docs/agent_validation_and_debugging.md",
     "ofag/_resources/docs/lessons/lessons.yaml",
-    "ofag/_resources/docs/development/benchmark/judgement.yaml",
-    "ofag/_resources/docs/development/benchmark/silent.yaml",
 }
 PRIVATE_ROOTS = {"paper", "data", "Result", "artifacts", "examples", "local_private"}
 PRIVATE_SUFFIXES = {".ipynb", ".pptx", ".docx", ".pdf", ".pem", ".key", ".p12", ".pfx"}
@@ -19,6 +17,18 @@ def _private(name: str) -> bool:
     parts = Path(name).parts
     return bool(
         set(parts) & PRIVATE_ROOTS
+        or any(
+            parts[index : index + 2] == ("docs", "development")
+            for index in range(len(parts) - 1)
+        )
+        or name.replace("\\", "/").endswith(
+            (
+                "ofag/agent/arms.py",
+                "ofag/agent/audit.py",
+                "ofag/agent/noticing.py",
+                "ofag/agent/replay.py",
+            )
+        )
         or Path(name).suffix.lower() in PRIVATE_SUFFIXES
         or Path(name).name.startswith(".env")
         or Path(name).name in {"credentials.json", "agent_settings.json"}

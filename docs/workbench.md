@@ -63,7 +63,7 @@ does not establish resolution or justify extrapolation between methods.
 Create a grid with measured ground, load selected results, and specify rules and
 spatial support. A build requires diagnosed and independently audited source runs.
 Every build saves a new model and its recipe; earlier versions remain available.
-Legacy case models without recipes are identified explicitly.
+Older models without recipes are identified explicitly.
 
 The recipe reader supports layered batches, individual TDEM soundings and recovered
 mesh models. Single soundings need a surveyed location. 2D profiles need an origin,

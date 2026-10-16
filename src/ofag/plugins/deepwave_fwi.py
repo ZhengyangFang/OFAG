@@ -881,9 +881,7 @@ class DeepwaveElasticFwiPlugin:
                 "misfit": ", ".join(stage.misfit or config.misfit for stage in config.stages),
                 "stages": len(config.stages),
                 "iterations": len(history),
-                # Relative to the observed data's own energy, so a value near one means
-                # "as wrong as predicting silence" and a comparison between two surveys
-                # means something.
+                # Normalize misfit by observed energy for comparisons.
                 "misfit_initial": history[0] if history else 0.0,
                 "misfit_final": history[-1] if history else 0.0,
                 "misfit_is_relative": True,
